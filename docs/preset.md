@@ -127,8 +127,8 @@
 
 ### Фильтры
 
-00000020 - 04 - LP value
-00000020 - 05 - HP value
+00000020 - 04 - LP value (Math.pow(195.0-value, 2) * (19000.0/Math.pow(195.0, 2.0)) + 1000.0).toFixed()
+00000020 - 05 - HP value ((value*980.0/255.0)+20.0).toFixed()
 00000020 - 06 - HP on / off
 00000020 - 07 - LP on / off
 
