@@ -20,6 +20,11 @@ import (
 	get_settings "github.com/atkhx/gopangaea/internal/cli/command/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/cli/command/get-version"
 	"github.com/atkhx/gopangaea/internal/cli/command/info"
+	set_hp_filter_state "github.com/atkhx/gopangaea/internal/cli/command/set-hp-filter-state"
+	set_hp_filter_value "github.com/atkhx/gopangaea/internal/cli/command/set-hp-filter-value"
+	set_impulse_state "github.com/atkhx/gopangaea/internal/cli/command/set-impulse-state"
+	set_lp_filter_state "github.com/atkhx/gopangaea/internal/cli/command/set-lp-filter-state"
+	set_lp_filter_value "github.com/atkhx/gopangaea/internal/cli/command/set-lp-filter-value"
 	set_master_volume "github.com/atkhx/gopangaea/internal/cli/command/set-master-volume"
 	set_presence_state "github.com/atkhx/gopangaea/internal/cli/command/set-presence-state"
 	set_presence_value "github.com/atkhx/gopangaea/internal/cli/command/set-presence-value"
@@ -101,6 +106,13 @@ func main() {
 			set_presence_state.CliCommand: set_presence_state.CliDescription,
 			set_presence_value.CliCommand: set_presence_value.CliDescription,
 
+			set_lp_filter_state.CliCommand: set_lp_filter_state.CliDescription,
+			set_lp_filter_value.CliCommand: set_lp_filter_value.CliDescription,
+			set_hp_filter_state.CliCommand: set_hp_filter_state.CliDescription,
+			set_hp_filter_value.CliCommand: set_hp_filter_value.CliDescription,
+
+			set_impulse_state.CliCommand: set_impulse_state.CliDescription,
+
 			exit.CliCommand: exit.CliDescription,
 			info.CliCommand: info.CliDescription,
 		}
@@ -123,6 +135,13 @@ func main() {
 
 			set_presence_state.CliCommand: set_presence_state.New(pangaea),
 			set_presence_value.CliCommand: set_presence_value.New(pangaea),
+
+			set_lp_filter_state.CliCommand: set_lp_filter_state.New(pangaea),
+			set_lp_filter_value.CliCommand: set_lp_filter_value.New(pangaea),
+			set_hp_filter_state.CliCommand: set_hp_filter_state.New(pangaea),
+			set_hp_filter_value.CliCommand: set_hp_filter_value.New(pangaea),
+
+			set_impulse_state.CliCommand: set_impulse_state.New(pangaea),
 
 			exit.CliCommand:  exit.New(stopScan),
 			info.CliCommand:  info.New(dev),

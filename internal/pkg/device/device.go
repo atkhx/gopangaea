@@ -9,6 +9,11 @@ import (
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
+	set_hp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-state"
+	set_hp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-value"
+	set_impulse_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-impulse-state"
+	set_lp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-state"
+	set_lp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-value"
 	set_master_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-master-volume"
 	set_presence_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-state"
 	set_presence_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-value"
@@ -196,4 +201,60 @@ func (d *device) SetPresenceVolume(value int) (set_presence_value.Response, erro
 	}
 
 	return set_presence_value.ParseResponse(b)
+}
+
+func (d *device) SetLPFilterState(value bool) (set_lp_filter_state.Response, error) {
+	command := set_lp_filter_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_lp_filter_state.Response{}, err
+	}
+
+	return set_lp_filter_state.ParseResponse(b)
+}
+
+func (d *device) SetLPFilterValue(value int) (set_lp_filter_value.Response, error) {
+	command, err := set_lp_filter_value.NewWithArgs(value)
+	if err != nil {
+		return set_lp_filter_value.Response{}, err
+	}
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_lp_filter_value.Response{}, err
+	}
+
+	return set_lp_filter_value.ParseResponse(b)
+}
+
+func (d *device) SetHPFilterState(value bool) (set_hp_filter_state.Response, error) {
+	command := set_hp_filter_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_hp_filter_state.Response{}, err
+	}
+
+	return set_hp_filter_state.ParseResponse(b)
+}
+
+func (d *device) SetHPFilterValue(value int) (set_hp_filter_value.Response, error) {
+	command, err := set_hp_filter_value.NewWithArgs(value)
+	if err != nil {
+		return set_hp_filter_value.Response{}, err
+	}
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_hp_filter_value.Response{}, err
+	}
+
+	return set_hp_filter_value.ParseResponse(b)
+}
+
+func (d *device) SetImpulseState(value bool) (set_impulse_state.Response, error) {
+	command := set_impulse_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_impulse_state.Response{}, err
+	}
+
+	return set_impulse_state.ParseResponse(b)
 }
