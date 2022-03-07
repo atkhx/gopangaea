@@ -7,20 +7,21 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 
 	"github.com/atkhx/gopangaea/internal/cli/command"
+	change_preset "github.com/atkhx/gopangaea/internal/cli/command/change-preset"
+	"github.com/atkhx/gopangaea/internal/cli/command/exit"
+	get_bank "github.com/atkhx/gopangaea/internal/cli/command/get-bank"
+	get_device "github.com/atkhx/gopangaea/internal/cli/command/get-device"
+	get_impulse_name "github.com/atkhx/gopangaea/internal/cli/command/get-impulse-name"
+	get_impulse_names "github.com/atkhx/gopangaea/internal/cli/command/get-impulse-names"
+	get_mode "github.com/atkhx/gopangaea/internal/cli/command/get-mode"
+	get_settings "github.com/atkhx/gopangaea/internal/cli/command/get-settings"
+	get_version "github.com/atkhx/gopangaea/internal/cli/command/get-version"
+	"github.com/atkhx/gopangaea/internal/cli/command/info"
+	"github.com/atkhx/gopangaea/internal/cli/command/usage"
 	"github.com/atkhx/gopangaea/internal/cli/parser"
-	"github.com/atkhx/gopangaea/internal/cli/processor"
-	change_preset "github.com/atkhx/gopangaea/internal/pkg/commands/change-preset"
-	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
-	get_device "github.com/atkhx/gopangaea/internal/pkg/commands/get-device"
-	get_impulse_name "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-name"
-	get_impulse_names "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-names"
-	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
-	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
-	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
 	"github.com/atkhx/gopangaea/internal/pkg/device"
 	"github.com/atkhx/gopangaea/internal/pkg/device/deviceio"
 	"github.com/jpoirier/gousb/usb"
@@ -29,52 +30,15 @@ import (
 func main() {
 	ctx, done := context.WithCancel(context.Background())
 	fmt.Println("#", "open connection")
+
 	usbContext := usb.NewContext()
 
-	defer func() {
-		fmt.Println("#", "close usb context")
-		if err := usbContext.Close(); err != nil {
-			fmt.Println("#", "close connection error:", err)
-		} else {
-			fmt.Println("#", "close connection success")
-		}
-	}()
-
-	devs, err := usbContext.ListDevices(func(desc *usb.Descriptor) bool {
-		//devs, err := usbContext.OpenDevices(func(desc *usb.DeviceDesc) bool {
-		return desc.Vendor == GetPangaeaVendor() && desc.Product == GetPangaeaProduct()
-	})
+	dev, closeFn, err := deviceio.GetPangaeaDevice(usbContext)
+	defer closeFn()
 	if err != nil {
 		log.Println("#", "get devices list failed:", err)
 		return
 	}
-
-	// All Devices returned from ListDevices must be closed.
-	defer func() {
-		fmt.Println("#", "close devices")
-		for i, dev := range devs {
-			if err := dev.Close(); err != nil {
-				fmt.Printf("# device[%d] close error: %s\n", i, err)
-			} else {
-				fmt.Printf("# device[%d] closed\n", i)
-			}
-		}
-	}()
-
-	showInfo := func(dev *usb.Device) {
-		desc := dev.Descriptor
-		s, _ := dev.GetStringDescriptor(2)
-		fmt.Printf("device descriptor: %s\n", s)
-		fmt.Printf("device dev.desc.Vendor: %s\n", desc.Vendor)
-		fmt.Printf("device dev.desc.Product: %s\n", desc.Product)
-	}
-
-	if len(devs) == 0 {
-		fmt.Println("# pangaea not found")
-		return
-	}
-
-	dev := devs[0]
 
 	epBulkWrite, err := dev.OpenEndpoint(
 		dev.Configs[0].Config,
@@ -107,42 +71,38 @@ func main() {
 		log.Println("device:", s)
 	}
 
-	knownCommands := []string{
-		get_bank.CliCommand,
-		get_device.CliCommand,
-		get_version.CliCommand,
-		get_impulse_name.CliCommand,
-		get_impulse_names.CliCommand,
-		get_mode.CliCommand,
-		get_settings.CliCommand,
-		change_preset.CliCommand,
-		"exit",
-		"info",
-		"help",
-	}
-
-	cmdParser := parser.New(map[string]command.Command{
-		get_bank.CliCommand:          get_bank.New(),
-		get_device.CliCommand:        get_device.New(),
-		get_version.CliCommand:       get_version.New(),
-		get_impulse_name.CliCommand:  get_impulse_name.New(),
-		get_impulse_names.CliCommand: get_impulse_names.New(),
-		get_mode.CliCommand:          get_mode.New(),
-		get_settings.CliCommand:      get_settings.New(),
-		change_preset.CliCommand:     change_preset.New(),
-	})
-
-	usage := func() {
-		fmt.Println("use commands:")
-		for _, cmd := range knownCommands {
-			fmt.Println("\t", cmd)
-		}
-	}
-
-	cmdProcessor := processor.New(pangaea)
-
 	go func() {
 		defer done()
+
+		scannerContext, stopScan := context.WithCancel(ctx)
+
+		knownCommands := map[string]string{
+			get_bank.CliCommand:          get_bank.CliDescription,
+			get_device.CliCommand:        get_device.CliDescription,
+			get_version.CliCommand:       get_version.CliDescription,
+			get_impulse_name.CliCommand:  get_impulse_name.CliDescription,
+			get_impulse_names.CliCommand: get_impulse_names.CliDescription,
+			get_mode.CliCommand:          get_mode.CliDescription,
+			get_settings.CliCommand:      get_settings.CliDescription,
+			change_preset.CliCommand:     change_preset.CliDescription,
+			exit.CliCommand:              exit.CliDescription,
+			info.CliCommand:              info.CliDescription,
+			usage.CliCommand:             usage.CliDescription,
+		}
+
+		cmdParser := parser.New(map[string]command.CliCommand{
+			get_bank.CliCommand:          get_bank.New(pangaea),
+			get_device.CliCommand:        get_device.New(pangaea),
+			get_version.CliCommand:       get_version.New(pangaea),
+			get_impulse_name.CliCommand:  get_impulse_name.New(pangaea),
+			get_impulse_names.CliCommand: get_impulse_names.New(pangaea),
+			get_mode.CliCommand:          get_mode.New(pangaea),
+			get_settings.CliCommand:      get_settings.New(pangaea),
+			change_preset.CliCommand:     change_preset.New(pangaea),
+			exit.CliCommand:              exit.New(stopScan),
+			info.CliCommand:              info.New(dev),
+			usage.CliCommand:             usage.New(knownCommands),
+		})
 
 		scanner := bufio.NewScanner(os.Stdin)
 
@@ -151,33 +111,28 @@ func main() {
 			return scanner.Scan()
 		}
 
-		for readCommand() {
-			if scanner.Text() == "exit" {
-				break
-			}
-
-			if scanner.Text() == "help" {
-				usage()
-				continue
-			}
-
-			if scanner.Text() == "info" {
-				showInfo(dev)
-				continue
+		for {
+			select {
+			case <-scannerContext.Done():
+				return
+			default:
+				if !readCommand() {
+					return
+				}
 			}
 
 			in, err := cmdParser.Parse(scanner.Text())
 			if err != nil {
 				if err == parser.ErrCommandIsUnknown {
-					usage()
-					continue
+					fmt.Println("unknown command:", scanner.Text())
+					fmt.Println("use 'help' for usage", scanner.Text())
+				} else if err != parser.ErrCommandIsEmpty {
+					fmt.Println("parse command error:", err)
 				}
-
-				fmt.Println("parse command error:", err)
 				continue
 			}
 
-			out, err := cmdProcessor.Exec(in)
+			out, err := in.Execute()
 			if err != nil {
 				fmt.Println("execute command error:", err)
 				continue
@@ -203,22 +158,4 @@ func waitSignal(ctx context.Context) {
 	case <-ctx.Done():
 		fmt.Println("context closed")
 	}
-}
-
-// GetPangaeaVendor returns the vendor ID of Pangaea CP-100 USB FS Mode
-func GetPangaeaVendor() usb.ID {
-	value, err := strconv.ParseUint("0483", 16, 16)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return usb.ID(value)
-}
-
-// GetPangaeaProduct returns the product ID of Pangaea CP-100 USB FS Mode
-func GetPangaeaProduct() usb.ID {
-	value, err := strconv.ParseUint("5740", 16, 16)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return usb.ID(value)
 }

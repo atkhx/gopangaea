@@ -12,21 +12,21 @@ var (
 	ErrCommandIsUnknown = errors.New("unknown command")
 )
 
-func New(knownCommands map[string]command.Command) *parser {
+func New(knownCommands map[string]command.CliCommand) *parser {
 	return &parser{knownCommands: knownCommands}
 }
 
 type parser struct {
-	knownCommands map[string]command.Command
+	knownCommands map[string]command.CliCommand
 }
 
-func (p *parser) Parse(input string) (command.Command, error) {
+func (p *parser) Parse(input string) (command.CliCommand, error) {
 	args := strings.Split(input, " ")
 	for k, v := range args {
 		args[k] = strings.TrimSpace(v)
 	}
 
-	if len(args) == 0 {
+	if len(args) == 0 || args[0] == "" {
 		return nil, ErrCommandIsEmpty
 	}
 
