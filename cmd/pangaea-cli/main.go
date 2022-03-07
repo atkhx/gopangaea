@@ -20,6 +20,12 @@ import (
 	get_settings "github.com/atkhx/gopangaea/internal/cli/command/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/cli/command/get-version"
 	"github.com/atkhx/gopangaea/internal/cli/command/info"
+	set_master_volume "github.com/atkhx/gopangaea/internal/cli/command/set-master-volume"
+	set_presence_state "github.com/atkhx/gopangaea/internal/cli/command/set-presence-state"
+	set_presence_value "github.com/atkhx/gopangaea/internal/cli/command/set-presence-value"
+	set_reverb_state "github.com/atkhx/gopangaea/internal/cli/command/set-reverb-state"
+	set_reverb_type "github.com/atkhx/gopangaea/internal/cli/command/set-reverb-type"
+	set_reverb_volume "github.com/atkhx/gopangaea/internal/cli/command/set-reverb-volume"
 	"github.com/atkhx/gopangaea/internal/cli/command/usage"
 	"github.com/atkhx/gopangaea/internal/cli/parser"
 	"github.com/atkhx/gopangaea/internal/pkg/device"
@@ -84,10 +90,19 @@ func main() {
 			get_impulse_names.CliCommand: get_impulse_names.CliDescription,
 			get_mode.CliCommand:          get_mode.CliDescription,
 			get_settings.CliCommand:      get_settings.CliDescription,
+
 			change_preset.CliCommand:     change_preset.CliDescription,
-			exit.CliCommand:              exit.CliDescription,
-			info.CliCommand:              info.CliDescription,
-			usage.CliCommand:             usage.CliDescription,
+			set_master_volume.CliCommand: set_master_volume.CliDescription,
+
+			set_reverb_state.CliCommand:  set_reverb_state.CliDescription,
+			set_reverb_type.CliCommand:   set_reverb_type.CliDescription,
+			set_reverb_volume.CliCommand: set_reverb_volume.CliDescription,
+
+			set_presence_state.CliCommand: set_presence_state.CliDescription,
+			set_presence_value.CliCommand: set_presence_value.CliDescription,
+
+			exit.CliCommand: exit.CliDescription,
+			info.CliCommand: info.CliDescription,
 		}
 
 		cmdParser := parser.New(map[string]command.CliCommand{
@@ -98,10 +113,20 @@ func main() {
 			get_impulse_names.CliCommand: get_impulse_names.New(pangaea),
 			get_mode.CliCommand:          get_mode.New(pangaea),
 			get_settings.CliCommand:      get_settings.New(pangaea),
+
 			change_preset.CliCommand:     change_preset.New(pangaea),
-			exit.CliCommand:              exit.New(stopScan),
-			info.CliCommand:              info.New(dev),
-			usage.CliCommand:             usage.New(knownCommands),
+			set_master_volume.CliCommand: set_master_volume.New(pangaea),
+
+			set_reverb_state.CliCommand:  set_reverb_state.New(pangaea),
+			set_reverb_type.CliCommand:   set_reverb_type.New(pangaea),
+			set_reverb_volume.CliCommand: set_reverb_volume.New(pangaea),
+
+			set_presence_state.CliCommand: set_presence_state.New(pangaea),
+			set_presence_value.CliCommand: set_presence_value.New(pangaea),
+
+			exit.CliCommand:  exit.New(stopScan),
+			info.CliCommand:  info.New(dev),
+			usage.CliCommand: usage.New(knownCommands),
 		})
 
 		scanner := bufio.NewScanner(os.Stdin)

@@ -33,9 +33,12 @@ func (c *Command) Execute() (interface{}, error) {
 
 	buffer.WriteString("Available commands:\n\n")
 	for _, command := range commands {
-		descriptionSpace := "\t\t"
-		if len(command) >= 8 {
-			descriptionSpace = "\t"
+		descriptionSpace := "\t"
+		switch {
+		case len(command) < 8:
+			descriptionSpace = "\t\t\t"
+		case len(command) < 16:
+			descriptionSpace = "\t\t"
 		}
 		buffer.WriteString("\t" + command + descriptionSpace + c.knownCommands[command] + "\n")
 	}

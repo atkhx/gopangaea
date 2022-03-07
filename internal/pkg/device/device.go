@@ -9,6 +9,12 @@ import (
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
+	set_master_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-master-volume"
+	set_presence_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-state"
+	set_presence_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-value"
+	set_reverb_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-state"
+	set_reverb_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-type"
+	set_reverb_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-volume"
 )
 
 type Command interface {
@@ -114,4 +120,80 @@ func (d *device) ChangePreset(bank, preset int) (change_preset.Response, error) 
 	}
 
 	return change_preset.ParseResponse(b)
+}
+
+func (d *device) SetMasterVolume(value int) (set_master_volume.Response, error) {
+	command, err := set_master_volume.NewWithArgs(value)
+	if err != nil {
+		return set_master_volume.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_master_volume.Response{}, err
+	}
+
+	return set_master_volume.ParseResponse(b)
+}
+
+func (d *device) SetReverbState(value bool) (set_reverb_state.Response, error) {
+	command := set_reverb_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_reverb_state.Response{}, err
+	}
+
+	return set_reverb_state.ParseResponse(b)
+}
+
+func (d *device) SetReverbType(value int) (set_reverb_type.Response, error) {
+	command, err := set_reverb_type.NewWithArgs(value)
+	if err != nil {
+		return set_reverb_type.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_reverb_type.Response{}, err
+	}
+
+	return set_reverb_type.ParseResponse(b)
+}
+
+func (d *device) SetReverbVolume(value int) (set_reverb_volume.Response, error) {
+	command, err := set_reverb_volume.NewWithArgs(value)
+	if err != nil {
+		return set_reverb_volume.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_reverb_volume.Response{}, err
+	}
+
+	return set_reverb_volume.ParseResponse(b)
+}
+
+func (d *device) SetPresenceState(value bool) (set_presence_state.Response, error) {
+	command := set_presence_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_presence_state.Response{}, err
+	}
+
+	return set_presence_state.ParseResponse(b)
+}
+
+func (d *device) SetPresenceVolume(value int) (set_presence_value.Response, error) {
+	command, err := set_presence_value.NewWithArgs(value)
+	if err != nil {
+		return set_presence_value.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_presence_value.Response{}, err
+	}
+
+	return set_presence_value.ParseResponse(b)
 }

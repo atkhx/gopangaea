@@ -39,7 +39,7 @@ func (c *Command) Execute() (interface{}, error) {
 }
 
 func (c *Command) ParseArgs(args []string) error {
-	flagset := flag.NewFlagSet("change-preset", flag.ContinueOnError)
+	flagset := flag.NewFlagSet(CliCommand, flag.ContinueOnError)
 
 	bank := flagset.Int("bank", 0, "index of bank [0..9]")
 	preset := flagset.Int("preset", 0, "index of preset [0..9]")
