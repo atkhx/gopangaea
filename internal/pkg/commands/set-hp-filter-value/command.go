@@ -10,9 +10,8 @@ const (
 )
 
 func Validate(value int) error {
-	// todo провалидировать min/max
-	if value < 0 || value > 255 {
-		return errors.New("value overflow: allowed range [0..255]")
+	if value < 20 || value > 1000 {
+		return errors.New("value overflow: allowed range [20..1000]")
 	}
 	return nil
 }
@@ -34,7 +33,10 @@ type Command struct {
 }
 
 func (c Command) GetCommand() string {
-	return fmt.Sprintf("%s %x", deviceCommand, c.value)
+	// Y = (X*980)/255 + 20
+	// X = (255 * (Y - 20))/980
+	val := int(255*(c.value-20)) / 980
+	return fmt.Sprintf("%s %x", deviceCommand, val)
 }
 
 func (c Command) GetResponseLength() int {

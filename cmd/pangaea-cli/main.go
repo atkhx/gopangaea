@@ -26,6 +26,8 @@ import (
 	set_lp_filter_state "github.com/atkhx/gopangaea/internal/cli/command/set-lp-filter-state"
 	set_lp_filter_value "github.com/atkhx/gopangaea/internal/cli/command/set-lp-filter-value"
 	set_master_volume "github.com/atkhx/gopangaea/internal/cli/command/set-master-volume"
+	set_poweramp_state "github.com/atkhx/gopangaea/internal/cli/command/set-poweramp-state"
+	set_poweramp_type "github.com/atkhx/gopangaea/internal/cli/command/set-poweramp-type"
 	set_presence_state "github.com/atkhx/gopangaea/internal/cli/command/set-presence-state"
 	set_presence_value "github.com/atkhx/gopangaea/internal/cli/command/set-presence-value"
 	set_reverb_state "github.com/atkhx/gopangaea/internal/cli/command/set-reverb-state"
@@ -113,6 +115,9 @@ func main() {
 
 			set_impulse_state.CliCommand: set_impulse_state.CliDescription,
 
+			set_poweramp_state.CliCommand: set_poweramp_state.CliDescription,
+			set_poweramp_type.CliCommand:  set_poweramp_type.CliDescription,
+
 			exit.CliCommand: exit.CliDescription,
 			info.CliCommand: info.CliDescription,
 		}
@@ -142,6 +147,9 @@ func main() {
 			set_hp_filter_value.CliCommand: set_hp_filter_value.New(pangaea),
 
 			set_impulse_state.CliCommand: set_impulse_state.New(pangaea),
+
+			set_poweramp_state.CliCommand: set_poweramp_state.New(pangaea),
+			set_poweramp_type.CliCommand:  set_poweramp_type.New(pangaea),
 
 			exit.CliCommand:  exit.New(stopScan),
 			info.CliCommand:  info.New(dev),

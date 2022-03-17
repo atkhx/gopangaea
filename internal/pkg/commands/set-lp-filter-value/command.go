@@ -3,6 +3,7 @@ package set_lp_filter_value
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 const (
@@ -10,9 +11,8 @@ const (
 )
 
 func Validate(value int) error {
-	// todo провалидировать min/max
-	if value < 0 || value > 255 {
-		return errors.New("value overflow: allowed range [0..255]")
+	if value < 1000 || value > 20000 {
+		return errors.New("value overflow: allowed range [1k..20k]")
 	}
 	return nil
 }
@@ -34,7 +34,11 @@ type Command struct {
 }
 
 func (c Command) GetCommand() string {
-	return fmt.Sprintf("%s %x", deviceCommand, c.value)
+	// Y = (195-X)^2 * (19000/195^2) + 1000
+	// X = 195 - sqrt((Y - 1000) / (19000/195^2))
+	val := int(195 - math.Sqrt((float64(c.value-1000))/(19000/math.Pow(195, 2))))
+
+	return fmt.Sprintf("%s %x", deviceCommand, val)
 }
 
 func (c Command) GetResponseLength() int {

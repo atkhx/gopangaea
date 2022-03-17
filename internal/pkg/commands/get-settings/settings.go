@@ -1,31 +1,32 @@
 package get_settings
 
 type Settings struct {
+	NoiseGate    NoiseGate
+	Compressor   Compressor
+	PreAmp       PreAmp
+	EarlyReverb  EarlyReverb
+	PowerAmp     PowerApm
+	Presence     Presence
+	Impulse      Impulse
+	MasterVolume int
+
 	Equalizer      Equalizer
-	EarlyReverb    EarlyReverb
-	MasterVolume   byte
-	Impulse        Impulse
-	PowerApm       PowerApm
-	PreAmp         PreAmp
-	Presence       Presence
-	NoiseGate      NoiseGate
-	Compressor     Compressor
 	LowPassFilter  LowPassFilter
 	HighPassFilter HighPassFilter
 }
 
 type Equalizer struct {
 	Active        bool
-	Position      byte    // pre / post
-	Mixer         [5]byte // EQ-Микшер
-	Frequencies   [5]byte // EQ-Частоты
-	QualityFactor [5]byte // EQ-Добротность
+	Position      int    // pre / post
+	Mixer         [5]int // EQ-Микшер
+	Frequencies   [5]int // EQ-Частоты
+	QualityFactor [5]int // EQ-Добротность
 }
 
 type EarlyReverb struct {
 	Active bool
-	Volume byte
-	Type   byte
+	Volume int
+	Type   int
 }
 
 type Impulse struct {
@@ -34,40 +35,40 @@ type Impulse struct {
 
 type PowerApm struct {
 	Active bool
-	Volume byte
-	Slave  byte
-	Index  byte
+	Volume int
+	Slave  int
+	Index  int
 }
 
 type PreAmp struct {
 	Active    bool
-	Volume    byte
-	Equalizer [3]byte
+	Volume    int
+	Equalizer [3]int
 }
 
 type Presence struct {
 	Active bool
-	Value  byte
+	Value  int
 }
 
 type NoiseGate struct {
 	Active bool
-	Thresh byte
-	Decay  byte
+	Thresh int
+	Decay  int
 }
 
 type Compressor struct {
 	Active  bool
-	Sustain byte
-	Volume  byte
+	Sustain int
+	Volume  int
 }
 
 type LowPassFilter struct {
 	Active bool
-	Value  byte
+	Value  int
 }
 
 type HighPassFilter struct {
 	Active bool
-	Value  byte
+	Value  int
 }

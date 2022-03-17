@@ -1,5 +1,2 @@
 .idea
-cmd/pangaea-web
-static
 origin
-templates

@@ -9,12 +9,33 @@ import (
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
+	set_compressor_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-state"
+	set_compressor_sustain "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-sustain"
+	set_compressor_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-volume"
+	set_equalizer_frequencies "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-frequencies"
+	set_equalizer_mixer "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-mixer"
+	set_equalizer_position "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-position"
+	set_equalizer_quantity_factor "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-quantity-factor"
+	set_equalizer_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-state"
 	set_hp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-state"
 	set_hp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-value"
 	set_impulse_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-impulse-state"
 	set_lp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-state"
 	set_lp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-value"
 	set_master_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-master-volume"
+	set_mode "github.com/atkhx/gopangaea/internal/pkg/commands/set-mode"
+	set_noisegate_decay "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-decay"
+	set_noisegate_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-state"
+	set_noisegate_thresh "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-thresh"
+	set_poweramp_slave "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-slave"
+	set_poweramp_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-state"
+	set_poweramp_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-type"
+	set_poweramp_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-volume"
+	set_preamp_high "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-high"
+	set_preamp_low "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-low"
+	set_preamp_mid "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-mid"
+	set_preamp_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-state"
+	set_preamp_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-volume"
 	set_presence_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-state"
 	set_presence_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-value"
 	set_reverb_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-state"
@@ -125,6 +146,20 @@ func (d *device) ChangePreset(bank, preset int) (change_preset.Response, error) 
 	}
 
 	return change_preset.ParseResponse(b)
+}
+
+func (d *device) SetMode(value int) (set_mode.Response, error) {
+	command, err := set_mode.NewWithArgs(value)
+	if err != nil {
+		return set_mode.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_mode.Response{}, err
+	}
+
+	return set_mode.ParseResponse(b)
 }
 
 func (d *device) SetMasterVolume(value int) (set_master_volume.Response, error) {
@@ -257,4 +292,260 @@ func (d *device) SetImpulseState(value bool) (set_impulse_state.Response, error)
 	}
 
 	return set_impulse_state.ParseResponse(b)
+}
+
+func (d *device) SetPreampState(value bool) (set_preamp_state.Response, error) {
+	command := set_preamp_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_preamp_state.Response{}, err
+	}
+
+	return set_preamp_state.ParseResponse(b)
+}
+
+func (d *device) SetPreampVolume(volume int) (set_preamp_volume.Response, error) {
+	command, err := set_preamp_volume.NewWithArgs(volume)
+	if err != nil {
+		return set_preamp_volume.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_preamp_volume.Response{}, err
+	}
+
+	return set_preamp_volume.ParseResponse(b)
+}
+
+func (d *device) SetPreampHigh(high int) (set_preamp_high.Response, error) {
+	command, err := set_preamp_high.NewWithArgs(high)
+	if err != nil {
+		return set_preamp_high.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_preamp_high.Response{}, err
+	}
+
+	return set_preamp_high.ParseResponse(b)
+}
+
+func (d *device) SetPreampMid(mid int) (set_preamp_mid.Response, error) {
+	command, err := set_preamp_mid.NewWithArgs(mid)
+	if err != nil {
+		return set_preamp_mid.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_preamp_mid.Response{}, err
+	}
+
+	return set_preamp_mid.ParseResponse(b)
+}
+
+func (d *device) SetPreampLow(low int) (set_preamp_low.Response, error) {
+	command, err := set_preamp_low.NewWithArgs(low)
+	if err != nil {
+		return set_preamp_low.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_preamp_low.Response{}, err
+	}
+
+	return set_preamp_low.ParseResponse(b)
+}
+
+func (d *device) SetPowerAmpState(value bool) (set_poweramp_state.Response, error) {
+	command := set_poweramp_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_poweramp_state.Response{}, err
+	}
+
+	return set_poweramp_state.ParseResponse(b)
+}
+
+func (d *device) SetPowerAmpType(value int) (set_poweramp_type.Response, error) {
+	command, err := set_poweramp_type.NewWithArgs(value)
+	if err != nil {
+		return set_poweramp_type.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_poweramp_type.Response{}, err
+	}
+
+	return set_poweramp_type.ParseResponse(b)
+}
+
+func (d *device) SetPowerAmpVolume(volume int) (set_poweramp_volume.Response, error) {
+	command, err := set_poweramp_volume.NewWithArgs(volume)
+	if err != nil {
+		return set_poweramp_volume.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_poweramp_volume.Response{}, err
+	}
+
+	return set_poweramp_volume.ParseResponse(b)
+}
+
+func (d *device) SetPowerAmpSlave(slave int) (set_poweramp_slave.Response, error) {
+	command, err := set_poweramp_slave.NewWithArgs(slave)
+	if err != nil {
+		return set_poweramp_slave.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_poweramp_slave.Response{}, err
+	}
+
+	return set_poweramp_slave.ParseResponse(b)
+}
+
+func (d *device) SetCompressorState(value bool) (set_compressor_state.Response, error) {
+	command := set_compressor_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_compressor_state.Response{}, err
+	}
+
+	return set_compressor_state.ParseResponse(b)
+}
+
+func (d *device) SetCompressorSustain(value int) (set_compressor_sustain.Response, error) {
+	command, err := set_compressor_sustain.NewWithArgs(value)
+	if err != nil {
+		return set_compressor_sustain.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_compressor_sustain.Response{}, err
+	}
+
+	return set_compressor_sustain.ParseResponse(b)
+}
+
+func (d *device) SetCompressorVolume(value int) (set_compressor_volume.Response, error) {
+	command, err := set_compressor_volume.NewWithArgs(value)
+	if err != nil {
+		return set_compressor_volume.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_compressor_volume.Response{}, err
+	}
+
+	return set_compressor_volume.ParseResponse(b)
+}
+
+func (d *device) SetNoiseGateState(value bool) (set_noisegate_state.Response, error) {
+	command := set_noisegate_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_noisegate_state.Response{}, err
+	}
+
+	return set_noisegate_state.ParseResponse(b)
+}
+
+func (d *device) SetNoiseGateThresh(value int) (set_noisegate_thresh.Response, error) {
+	command, err := set_noisegate_thresh.NewWithArgs(value)
+	if err != nil {
+		return set_noisegate_thresh.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_noisegate_thresh.Response{}, err
+	}
+
+	return set_noisegate_thresh.ParseResponse(b)
+}
+
+func (d *device) SetNoiseGateDecay(value int) (set_noisegate_decay.Response, error) {
+	command, err := set_noisegate_decay.NewWithArgs(value)
+	if err != nil {
+		return set_noisegate_decay.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_noisegate_decay.Response{}, err
+	}
+
+	return set_noisegate_decay.ParseResponse(b)
+}
+
+func (d *device) SetEqualizerState(value bool) (set_equalizer_state.Response, error) {
+	command := set_equalizer_state.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_equalizer_state.Response{}, err
+	}
+
+	return set_equalizer_state.ParseResponse(b)
+}
+
+func (d *device) SetEqualizerPosition(value bool) (set_equalizer_position.Response, error) {
+	command := set_equalizer_position.NewWithArgs(value)
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_equalizer_position.Response{}, err
+	}
+
+	return set_equalizer_position.ParseResponse(b)
+}
+
+func (d *device) SetEqualizerQuantityFactor(idx, value int) (set_equalizer_quantity_factor.Response, error) {
+	command, err := set_equalizer_quantity_factor.NewWithArgs(idx, value)
+	if err != nil {
+		return set_equalizer_quantity_factor.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_equalizer_quantity_factor.Response{}, err
+	}
+
+	return set_equalizer_quantity_factor.ParseResponse(b)
+}
+
+func (d *device) SetEqualizerFrequencies(idx, value int) (set_equalizer_frequencies.Response, error) {
+	command, err := set_equalizer_frequencies.NewWithArgs(idx, value)
+	if err != nil {
+		return set_equalizer_frequencies.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_equalizer_frequencies.Response{}, err
+	}
+
+	return set_equalizer_frequencies.ParseResponse(b)
+}
+
+func (d *device) SetEqualizerMixer(idx, value int) (set_equalizer_mixer.Response, error) {
+	command, err := set_equalizer_mixer.NewWithArgs(idx, value)
+	if err != nil {
+		return set_equalizer_mixer.Response{}, err
+	}
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return set_equalizer_mixer.Response{}, err
+	}
+
+	return set_equalizer_mixer.ParseResponse(b)
 }

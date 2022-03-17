@@ -46,6 +46,6 @@
 00000020 - 05 - HP value
 00000020 - 06 - HP on / off
 00000020 - 07 - LP on / off
-00000020 - 08 - Presence on / off
+00000020 - 08 - Presence on / off 40
 00000020 - 09 - Presence value
 00000020 - 10 - EQ post / pre
