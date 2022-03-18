@@ -46,37 +46,13 @@ func main() {
 
 	usbContext := usb.NewContext()
 
-	dev, closeFn, err := deviceio.GetPangaeaDevice(usbContext)
-	defer closeFn()
-	if err != nil {
-		log.Println("#", "get devices list failed:", err)
-		return
+	conn := deviceio.New(usbContext)
+	defer conn.Disconnect()
+	if err := conn.Connect(); err != nil {
+		log.Fatalln(err)
 	}
 
-	epBulkWrite, err := dev.OpenEndpoint(
-		dev.Configs[0].Config,
-		dev.Configs[0].Interfaces[1].Number,
-		0,
-		dev.Configs[0].Interfaces[1].Setups[0].Endpoints[0].Address|uint8(usb.ENDPOINT_DIR_OUT),
-	)
-	if err != nil {
-		log.Fatalf("OpenEndpoint Write error for %v: %v", dev.Address, err)
-	}
-
-	epBulkRead, err := dev.OpenEndpoint(
-		dev.Configs[0].Config,
-		dev.Configs[0].Interfaces[1].Number,
-		0,
-		dev.Configs[0].Interfaces[1].Setups[0].Endpoints[1].Address,
-	)
-	if err != nil {
-		log.Fatalf("OpenEndpoint Read error for %v: %v", dev.Address, err)
-	}
-
-	pangaea := device.New(
-		deviceio.NewCommandWriter(epBulkWrite),
-		deviceio.NewResponseReader(epBulkRead),
-	)
+	pangaea := device.New(conn)
 
 	if s, err := pangaea.GetDevice(); err != nil {
 		log.Fatalln(err)
@@ -152,7 +128,7 @@ func main() {
 			set_poweramp_type.CliCommand:  set_poweramp_type.New(pangaea),
 
 			exit.CliCommand:  exit.New(stopScan),
-			info.CliCommand:  info.New(dev),
+			info.CliCommand:  info.New(conn.Device()),
 			usage.CliCommand: usage.New(knownCommands),
 		})
 

@@ -17,6 +17,14 @@
             <li class="list-group-item">
                 <div class="row">
                     <div class="col-md-3">
+                        <label class="form-label">Режим</label>
+                        {{if .Connected}}
+                        <div>подключено</div>
+                        {{else}}
+                        <div>не подключено</div>
+                        {{end}}
+                    </div>
+                    <div class="col-md-3">
                         <label for="mode" class="form-label">Режим</label>
                         <input type="range" class="form-range" id="mode" min="1" max="3" value="{{.Mode}}">
                     </div>

@@ -48,22 +48,24 @@ type Command interface {
 	GetResponseLength() int
 }
 
-type CommandWriter interface {
-	Write(command string) error
-}
-
-type ResponseReader interface {
-	Read() ([]byte, error)
-	ReadWithSkipTails(command string, length int) ([]byte, error)
+type Connection interface {
+	IsConnected() bool
+	Connect() error
+	Disconnect() error
+	WriteCommand(command string) error
+	ReadResponse(command string, length int) ([]byte, error)
 }
 
 type device struct {
-	writer CommandWriter
-	reader ResponseReader
+	connection Connection
 }
 
-func New(writer CommandWriter, reader ResponseReader) *device {
-	return &device{writer: writer, reader: reader}
+func New(connection Connection) *device {
+	return &device{connection: connection}
+}
+
+func (d *device) IsConnected() bool {
+	return d.connection.IsConnected()
 }
 
 func (d *device) ExecCommand(command Command) ([]byte, error) {
@@ -71,11 +73,17 @@ func (d *device) ExecCommand(command Command) ([]byte, error) {
 }
 
 func (d *device) execCommand(command string, responseLength int) ([]byte, error) {
-	if err := d.writer.Write(command); err != nil {
+	if !d.IsConnected() {
+		if err := d.connection.Connect(); err != nil {
+			return nil, err
+		}
+	}
+
+	if err := d.connection.WriteCommand(command); err != nil {
 		return nil, err
 	}
 
-	return d.reader.ReadWithSkipTails(command, responseLength)
+	return d.connection.ReadResponse(command, responseLength)
 }
 
 func (d *device) GetDevice() (get_device.Response, error) {

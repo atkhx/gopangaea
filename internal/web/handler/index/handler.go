@@ -1,7 +1,6 @@
 package index
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 )
 
 type Device interface {
+	IsConnected() bool
 	GetSettings() (get_settings.Response, error)
 	GetMode() (get_mode.Response, error)
 }
@@ -31,27 +31,29 @@ func New(device Device, renderer Renderer) *handler {
 }
 
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	settings, err := h.device.GetSettings()
-	if err != nil {
-		w.Write([]byte(fmt.Sprintf("get settings failed: %s", err)))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	connected := h.device.IsConnected()
 
 	mode, err := h.device.GetMode()
 	if err != nil {
-		w.Write([]byte(fmt.Sprintf("get mode failed: %s", err)))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		log.Println("error on get mode:", err)
+	}
+
+	viewData := map[string]interface{}{
+		"Connected": connected,
+		"Mode":      mode.Mode,
+		"Settings":  form.Form{},
+	}
+
+	if connected {
+		settings, err := h.device.GetSettings()
+		if err != nil {
+			log.Println("error on get settings:", err)
+		}
+		viewData["Settings"] = form.FromDto(settings.Settings())
 	}
 
 	layoutData := map[string]interface{}{
 		"title": "PANGAEA CP-100 GUI",
-	}
-
-	viewData := map[string]interface{}{
-		"Settings": form.FromDto(settings.Settings()),
-		"Mode":     mode.Mode,
 	}
 
 	if err := h.renderer.RenderLayoutWithView(w, "main", "index", layoutData, viewData); err != nil {

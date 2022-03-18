@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"math"
-
-	"github.com/atkhx/gopangaea/internal/pkg/valreader"
+	"strconv"
 )
 
 const ResponseLength = 90
@@ -19,103 +19,112 @@ func ParseResponse(data []byte) (Response, error) {
 	if len(data) != ResponseLength {
 		return Response{}, errors.New(fmt.Sprintf("invalid data length: %d", len(data)))
 	}
-	return Response{Bytes: data[3:]}, nil
+	return Response{Bytes: convertResponse(data[3:89])}, nil
 }
 
 func (r Response) String() string {
 	return hex.Dump(r.Bytes)
 }
 
+func convertResponse(data []byte) []byte {
+	result := make([]byte, len(data)/2)
+
+	for i := 0; i < len(data); i += 2 {
+		r, err := strconv.ParseUint(string(data[i:i+2]), 16, 16)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		result[i/2] = byte(r)
+	}
+
+	return result
+}
+
 func (r Response) Settings() Settings {
-	//fmt.Println(hex.Dump(r.Bytes))
+	lpv := int(math.Pow(195.0-float64(int(r.Bytes[36])), 2)*(19000.0/math.Pow(195.0, 2.0)) + 1000.0)
+	hpv := (int(r.Bytes[37])*980)/255 + 20
 
-	lpv := valreader.ReadIntFromChar(string(r.Bytes[72:74]), "LowPassFilter.Value")
-	lpv = int(math.Pow(195.0-float64(lpv), 2)*(19000.0/math.Pow(195.0, 2.0)) + 1000.0)
-
-	hpv := valreader.ReadIntFromChar(string(r.Bytes[74:76]), "HighPassFilter.Value")
-	hpv = (hpv*980)/255 + 20
-
-	prh := valreader.ReadIntFromChar(string(r.Bytes[38:40]), "PreAmp.Equalizer.high") - 192
+	prh := int(r.Bytes[19])
 	if prh < 0 {
 		prh = 256 + prh
 	}
 
-	prm := valreader.ReadIntFromChar(string(r.Bytes[36:38]), "PreAmp.Equalizer.mid") - 192
+	prm := int(r.Bytes[18]) - 192
 	if prm < 0 {
 		prm = 256 + prm
 	}
 
-	prl := valreader.ReadIntFromChar(string(r.Bytes[34:36]), "PreAmp.Equalizer.low") - 192
+	prl := int(r.Bytes[17]) - 192
 	if prl < 0 {
 		prl = 256 + prl
 	}
 
 	return Settings{
 		NoiseGate: NoiseGate{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[40:42]), "NoiseGate.Active") > 0,
-			Thresh: valreader.ReadIntFromChar(string(r.Bytes[42:44]), "NoiseGate.Thresh"),
-			Decay:  valreader.ReadIntFromChar(string(r.Bytes[44:46]), "NoiseGate.Decay"),
+			Active: r.Bytes[20] > 0,
+			Thresh: int(r.Bytes[21]),
+			Decay:  int(r.Bytes[22]),
 		},
 		Compressor: Compressor{
-			Active:  valreader.ReadIntFromChar(string(r.Bytes[46:48]), "Compressor.Active") > 0,
-			Sustain: valreader.ReadIntFromChar(string(r.Bytes[48:50]), "Compressor.Sustain"),
-			Volume:  valreader.ReadIntFromChar(string(r.Bytes[50:52]), "Compressor.Volume"),
+			Active:  r.Bytes[23] > 0,
+			Sustain: int(r.Bytes[24]),
+			Volume:  int(r.Bytes[25]),
 		},
 		PreAmp: PreAmp{
-			Active:    valreader.ReadIntFromChar(string(r.Bytes[30:32]), "PreAmp.Active") > 0,
-			Volume:    valreader.ReadIntFromChar(string(r.Bytes[32:34]), "PreAmp.Volume"),
+			Active:    r.Bytes[15] > 0,
+			Volume:    int(r.Bytes[16]),
 			Equalizer: [3]int{prl, prm, prh},
 		},
 		EarlyReverb: EarlyReverb{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[20:22]), "EarlyReverb.Active") > 0,
-			Volume: valreader.ReadIntFromChar(string(r.Bytes[10:12]), "EarlyReverb.Volume"),
-			Type:   valreader.ReadIntFromChar(string(r.Bytes[12:14]), "EarlyReverb.Type"),
+			Active: r.Bytes[10] > 0,
+			Volume: int(r.Bytes[5]),
+			Type:   int(r.Bytes[6]),
 		},
 		PowerAmp: PowerApm{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[22:24]), "PowerAmp.Active") > 0,
-			Volume: valreader.ReadIntFromChar(string(r.Bytes[24:26]), "PowerAmp.Volume"),
-			Slave:  valreader.ReadIntFromChar(string(r.Bytes[26:28]), "PowerAmp.Slave"),
-			Index:  valreader.ReadIntFromChar(string(r.Bytes[28:30]), "PowerAmp.Index"),
+			Active: r.Bytes[11] > 0,
+			Volume: int(r.Bytes[12]),
+			Slave:  int(r.Bytes[13]),
+			Index:  int(r.Bytes[14]),
 		},
 		Presence: Presence{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[80:82]), "Presence.Active") > 0,
-			Value:  valreader.ReadIntFromChar(string(r.Bytes[82:84]), "Presence.Value"),
+			Active: r.Bytes[40] > 0,
+			Value:  int(r.Bytes[41]),
 		},
 		Impulse: Impulse{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[16:18]), "Impulse") > 0,
+			Active: r.Bytes[8] > 0,
 		},
-		MasterVolume: valreader.ReadIntFromChar(string(r.Bytes[14:16]), "MasterVolume"),
+		MasterVolume: int(r.Bytes[7]),
 		Equalizer: Equalizer{
-			Active:   valreader.ReadIntFromChar(string(r.Bytes[18:20]), "Equalizer.Active") > 0,
-			Position: valreader.ReadIntFromChar(string(r.Bytes[84:86]), "Equalizer.Position"),
+			Active:   r.Bytes[9] > 0,
+			Position: int(r.Bytes[42]),
 			Mixer: [5]int{
-				mixer(valreader.ReadIntFromChar(string(r.Bytes[0:2]), "Equalizer.Mixer1")),
-				mixer(valreader.ReadIntFromChar(string(r.Bytes[2:4]), "Equalizer.Mixer2")),
-				mixer(valreader.ReadIntFromChar(string(r.Bytes[4:6]), "Equalizer.Mixer3")),
-				mixer(valreader.ReadIntFromChar(string(r.Bytes[6:8]), "Equalizer.Mixer4")),
-				mixer(valreader.ReadIntFromChar(string(r.Bytes[8:10]), "Equalizer.Mixer5")),
+				mixer(int(r.Bytes[0])),
+				mixer(int(r.Bytes[1])),
+				mixer(int(r.Bytes[2])),
+				mixer(int(r.Bytes[3])),
+				mixer(int(r.Bytes[4])),
 			},
 			Frequencies: [5]int{
-				frequence(120, 1, valreader.ReadIntFromChar(string(r.Bytes[52:54]), "Equalizer.FR1")),
-				frequence(360, 1, valreader.ReadIntFromChar(string(r.Bytes[54:56]), "Equalizer.FR2")),
-				frequence(800, 2, valreader.ReadIntFromChar(string(r.Bytes[56:58]), "Equalizer.FR3")),
-				frequence(2000, 10, valreader.ReadIntFromChar(string(r.Bytes[58:60]), "Equalizer.FR4")),
-				frequence(6000, 50, valreader.ReadIntFromChar(string(r.Bytes[60:62]), "Equalizer.FR5")),
+				frequence(120, 1, int(r.Bytes[26])),
+				frequence(360, 1, int(r.Bytes[27])),
+				frequence(800, 2, int(r.Bytes[28])),
+				frequence(2000, 10, int(r.Bytes[29])),
+				frequence(6000, 50, int(r.Bytes[30])),
 			},
 			QualityFactor: [5]int{
-				quantityFactory(valreader.ReadIntFromChar(string(r.Bytes[62:64]), "Equalizer.QF1")),
-				quantityFactory(valreader.ReadIntFromChar(string(r.Bytes[64:66]), "Equalizer.QF2")),
-				quantityFactory(valreader.ReadIntFromChar(string(r.Bytes[66:68]), "Equalizer.QF2")),
-				quantityFactory(valreader.ReadIntFromChar(string(r.Bytes[68:70]), "Equalizer.QF2")),
-				quantityFactory(valreader.ReadIntFromChar(string(r.Bytes[70:72]), "Equalizer.QF2")),
+				quantityFactory(int(r.Bytes[31])),
+				quantityFactory(int(r.Bytes[32])),
+				quantityFactory(int(r.Bytes[33])),
+				quantityFactory(int(r.Bytes[34])),
+				quantityFactory(int(r.Bytes[35])),
 			},
 		},
 		LowPassFilter: LowPassFilter{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[78:80]), "LowPassFilter.Active") > 0,
+			Active: r.Bytes[39] > 0,
 			Value:  lpv,
 		},
 		HighPassFilter: HighPassFilter{
-			Active: valreader.ReadIntFromChar(string(r.Bytes[76:78]), "HighPassFilter.Active") > 0,
+			Active: r.Bytes[38] > 0,
 			Value:  hpv,
 		},
 	}
