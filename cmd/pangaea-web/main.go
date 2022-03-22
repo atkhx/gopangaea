@@ -13,6 +13,8 @@ import (
 	"github.com/atkhx/gopangaea/internal/pkg/device/deviceio"
 	"github.com/atkhx/gopangaea/internal/web/handler/change"
 	"github.com/atkhx/gopangaea/internal/web/handler/index"
+	reset_preset "github.com/atkhx/gopangaea/internal/web/handler/reset-preset"
+	save_preset "github.com/atkhx/gopangaea/internal/web/handler/save-preset"
 	"github.com/atkhx/gopangaea/internal/web/templates"
 	"github.com/jpoirier/gousb/usb"
 	"github.com/pkg/errors"
@@ -23,6 +25,7 @@ var root = "./"
 var templatePaths = []string{
 	"templates/layout/*.html",
 	"templates/views/*.html",
+	"templates/views/*/*.html",
 }
 
 var httpHost = "localhost"
@@ -44,6 +47,8 @@ func main() {
 
 	http.Handle("/", index.New(pangaea, tpls))
 	http.Handle("/change", change.New(pangaea, tpls))
+	http.Handle("/save-preset", save_preset.New(pangaea))
+	http.Handle("/reset-preset", reset_preset.New(pangaea))
 	http.Handle("/static/", http.FileServer(http.Dir(root)))
 
 	go func() {

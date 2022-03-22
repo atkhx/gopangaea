@@ -1,0 +1,38 @@
+{{define "views/index/device"}}
+<div class="card">
+    <div class="card-body">
+        <div class="mb-3">
+            Состояние:
+            {{if .Connected}}
+            <strong>подключено</strong>
+            {{else}}
+            <strong>не подключено</strong>
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">подключение...</span>
+            </div>
+            {{end}}
+        </div>
+        <div>Устройство: <strong>{{.Device}}</strong></div>
+        <div>Прошивка: <strong>{{.Version}}</strong></div>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="masterVolume" class="form-label">Master Volume</label>
+            <input type="range" class="form-range" id="masterVolume" min="0" max="31" value="{{.Settings.MasterVolume}}">
+        </li>
+
+        <li class="list-group-item">
+            <div class="btn-group btn-group-sm align-items-center p-1 mb-1" role="group">
+                <input type="radio" class="btn-check" name="mode" id="mode1" autocomplete="off" value="1" {{if eq .Mode 1}}checked{{end}}>
+                <label class="btn btn-outline-primary" for="mode1">Phones</label>
+
+                <input type="radio" class="btn-check" name="mode" id="mode2" autocomplete="off" value="2" {{if eq .Mode 2}}checked{{end}}>
+                <label class="btn btn-outline-primary" for="mode2">Line</label>
+
+                <input type="radio" class="btn-check" name="mode" id="mode3" autocomplete="off" value="3" {{if eq .Mode 3}}checked{{end}}>
+                <label class="btn btn-outline-primary" for="mode3">Balance</label>
+            </div>
+        </li>
+    </ul>
+</div>
+{{end}}

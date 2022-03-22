@@ -42,7 +42,7 @@ func (c Command) GetCommand() string {
 }
 
 func (c Command) GetResponseLength() int {
-	return 0
+	return len(successResponse)
 }
 
 func (c Command) ParseResponse(b []byte) (interface{}, error) {

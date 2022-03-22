@@ -1,0 +1,63 @@
+{{define "views/index/poweramp"}}
+<div class="card">
+    <div class="card-header">
+        PowerAmp
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="presenceValue" class="form-label">Presence</label>
+            <input type="range" class="form-range" id="presenceValue" min="0" max="31" value="{{.Settings.Presence.Value}}">
+        </li>
+        <li class="list-group-item">
+            <label for="powerAmpSlave" class="form-label">Slave</label>
+            <input type="range" class="form-range" id="powerAmpSlave" min="0" max="31" value="{{.Settings.PowerAmp.Slave}}">
+        </li>
+        <li class="list-group-item">
+            <label for="powerAmpVolume" class="form-label">Volume</label>
+            <input type="range" class="form-range" id="powerAmpVolume" min="0" max="31" value="{{.Settings.PowerAmp.Volume}}">
+        </li>
+        <li class="list-group-item">
+            <div class="form-floating">
+                <select class="form-select" id="powerAmpType" aria-label="Тип усилителя">
+                    {{range $idx, $val := .Settings.AmpTypes }}
+                    <option value="{{ $idx }}" {{ if $val.Selected }}selected{{end}}>{{ $val.Name }}</option>
+                    {{end}}
+                </select>
+                <label for="powerAmpType">Тип усилителя</label>
+            </div>
+        </li>
+    </ul>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-check form-switch">
+                    <input type="hidden" role="switch" value="0" name="powerAmpEnabled">
+                    <input class="form-check-input" type="checkbox" role="switch" value="1"
+                           {{if .Settings.PowerAmp.Active}} checked {{end}}
+                           id="powerAmpEnabled"
+                           name="powerAmpEnabled"
+                    >
+                    <label class="form-check-label" for="powerAmpEnabled">
+                        активно
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-check form-switch">
+                    <input type="hidden" role="switch" value="0" name="presenceEnabled">
+                    <input class="form-check-input" type="checkbox" role="switch" value="1"
+                           {{if .Settings.Presence.Active}} checked {{end}}
+                           id="presenceEnabled"
+                           name="presenceEnabled"
+                    >
+                    <label class="form-check-label" for="presenceEnabled">
+                        presence
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

@@ -29,15 +29,15 @@ type templates struct {
 }
 
 func (t *templates) parse() (err error) {
-	if t.tmpls == nil {
-		t.tmpls = template.New("templates")
-		for i := 0; i < len(t.paths); i++ {
-			_, err = t.tmpls.ParseGlob(t.root + t.paths[i])
-			if err != nil {
-				break
-			}
+	//if t.tmpls == nil {
+	t.tmpls = template.New("templates")
+	for i := 0; i < len(t.paths); i++ {
+		_, err = t.tmpls.ParseGlob(t.root + t.paths[i])
+		if err != nil {
+			break
 		}
 	}
+	//}
 
 	return
 }
@@ -55,6 +55,11 @@ func (t *templates) RenderView(w io.Writer, name string, data interface{}) error
 }
 
 func (t *templates) RenderLayoutWithView(w io.Writer, layout, view string, layoutData, viewData map[string]interface{}) error {
+	// for debug
+	if err := t.parse(); err != nil {
+		return err
+	}
+	// <- for debug
 
 	buf := bytes.NewBuffer(nil)
 	if err := t.RenderView(buf, view, viewData); err != nil {

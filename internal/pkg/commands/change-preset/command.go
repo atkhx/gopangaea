@@ -34,7 +34,7 @@ func (c Command) GetCommand() string {
 }
 
 func (c Command) GetResponseLength() int {
-	return 0
+	return len(successResponse)
 }
 
 func Validate(bank, preset int) error {

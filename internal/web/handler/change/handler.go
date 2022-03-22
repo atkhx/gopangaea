@@ -47,6 +47,7 @@ import (
 type Device interface {
 	SetMode(value int) (set_mode.Response, error)
 	SetMasterVolume(value int) (set_master_volume.Response, error)
+	SetCabinetFromDevice(value int) (bool, error)
 
 	SetReverbState(value bool) (set_reverb_state.Response, error)
 	SetReverbType(value int) (set_reverb_type.Response, error)
@@ -243,6 +244,8 @@ func (h *handler) changeParams(params []Param) (interface{}, error) {
 			return h.device.SetMode(mustBeInt(param.Value))
 		case "masterVolume":
 			return h.device.SetMasterVolume(mustBeInt(param.Value))
+		case "cabinetType":
+			return h.device.SetCabinetFromDevice(mustBeInt(param.Value))
 		}
 	}
 	return "unknown param", nil

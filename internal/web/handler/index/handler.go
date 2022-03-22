@@ -5,8 +5,12 @@ import (
 	"log"
 	"net/http"
 
+	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
+	get_device "github.com/atkhx/gopangaea/internal/pkg/commands/get-device"
+	get_impulse_names "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-names"
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
+	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
 	"github.com/atkhx/gopangaea/internal/web/form"
 	"github.com/pkg/errors"
 )
@@ -15,6 +19,10 @@ type Device interface {
 	IsConnected() bool
 	GetSettings() (get_settings.Response, error)
 	GetMode() (get_mode.Response, error)
+	GetDevice() (get_device.Response, error)
+	GetVersion() (get_version.Response, error)
+	GetBank() (get_bank.Response, error)
+	GetImpulseNames() (get_impulse_names.Response, error)
 }
 
 type Renderer interface {
@@ -31,25 +39,54 @@ func New(device Device, renderer Renderer) *handler {
 }
 
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	connected := h.device.IsConnected()
 
 	mode, err := h.device.GetMode()
 	if err != nil {
 		log.Println("error on get mode:", err)
 	}
 
+	device, err := h.device.GetDevice()
+	if err != nil {
+		log.Println("error on get device:", err)
+	}
+
+	version, err := h.device.GetVersion()
+	if err != nil {
+		log.Println("error on get version:", err)
+	}
+
+	bank, err := h.device.GetBank()
+	if err != nil {
+		log.Println("error on get bank:", err)
+	}
+
+	connected := h.device.IsConnected()
+
 	viewData := map[string]interface{}{
-		"Connected": connected,
-		"Mode":      mode.Mode,
-		"Settings":  form.Form{},
+		"Connected":      connected,
+		"Mode":           mode.Mode,
+		"Device":         device.String(),
+		"Bank":           bank.Bank,
+		"Preset":         bank.Preset,
+		"Version":        version.String(),
+		"Settings":       form.Form{},
+		"DeviceImpulses": form.DeviceImpulses{},
 	}
 
 	if connected {
 		settings, err := h.device.GetSettings()
 		if err != nil {
 			log.Println("error on get settings:", err)
+		} else {
+			viewData["Settings"] = form.FromDto(settings.Settings())
 		}
-		viewData["Settings"] = form.FromDto(settings.Settings())
+
+		impulses, err := h.device.GetImpulseNames()
+		if err != nil {
+			log.Println("error on get impulses:", err)
+		} else {
+			viewData["DeviceImpulses"] = form.DeviceImpulsesFromDto(impulses)
+		}
 	}
 
 	layoutData := map[string]interface{}{

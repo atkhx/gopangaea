@@ -1,0 +1,36 @@
+{{define "views/index/compressor"}}
+<div class="card">
+    <div class="card-header">
+        Compressor
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="compressorSustain" class="form-label">Sustain</label>
+            <input type="range" class="form-range"
+                   id="compressorSustain"
+                   name="compressorSustain"
+                   min="0" max="31" value="{{.Settings.Compressor.Sustain}}">
+        </li>
+        <li class="list-group-item">
+            <label for="compressorVolume" class="form-label">Volume</label>
+            <input type="range" class="form-range"
+                   id="compressorVolume"
+                   name="compressorVolume"
+                   min="0" max="31" value="{{.Settings.Compressor.Volume}}">
+        </li>
+    </ul>
+    <div class="card-body">
+        <div class="form-check form-switch">
+            <input type="hidden" role="switch" value="0" name="compressorEnabled">
+            <input class="form-check-input" type="checkbox" role="switch" value="1"
+                   {{if .Settings.Compressor.Active}} checked {{end}}
+                   id="compressorEnabled"
+                   name="compressorEnabled"
+            >
+            <label class="form-check-label" for="compressorEnabled">
+                активно
+            </label>
+        </div>
+    </div>
+</div>
+{{end}}

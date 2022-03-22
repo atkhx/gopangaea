@@ -1,0 +1,75 @@
+{{define "views/index/equalizer"}}
+<div class="card">
+    <div class="card-header">
+        Эквалайзер
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-sm-2"><label class="form-label">Добротность</label></div>
+                <!-- 0.1 .. 20 -->
+                <div class="col-sm-2"><input type="range" class="form-range" id="qualityFactor1" min="1" max="200" value="{{index .Settings.Equalizer.QualityFactor 0}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="qualityFactor2" min="1" max="200" value="{{index .Settings.Equalizer.QualityFactor 1}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="qualityFactor3" min="1" max="200" value="{{index .Settings.Equalizer.QualityFactor 2}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="qualityFactor4" min="1" max="200" value="{{index .Settings.Equalizer.QualityFactor 3}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="qualityFactor5" min="1" max="200" value="{{index .Settings.Equalizer.QualityFactor 4}}"></div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-sm-2"><label class="form-label">Микшер</label></div>
+                <!-- 0.1 .. 20 -->
+                <div class="col-sm-2"><input type="range" class="form-range" id="mixer1" min="-15" max="15" value="{{index .Settings.Equalizer.Mixer 0}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="mixer2" min="-15" max="15" value="{{index .Settings.Equalizer.Mixer 1}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="mixer3" min="-15" max="15" value="{{index .Settings.Equalizer.Mixer 2}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="mixer4" min="-15" max="15" value="{{index .Settings.Equalizer.Mixer 3}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="mixer5" min="-15" max="15" value="{{index .Settings.Equalizer.Mixer 4}}"></div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-sm-2"><label class="form-label">Частоты</label></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="frequencies1" min="20" max="220" value="{{index .Settings.Equalizer.Frequencies 0}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="frequencies2" min="260" max="460" value="{{index .Settings.Equalizer.Frequencies 1}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="frequencies3" min="600" max="1000" value="{{index .Settings.Equalizer.Frequencies 2}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="frequencies4" min="1000" max="3000" value="{{index .Settings.Equalizer.Frequencies 3}}"></div>
+                <div class="col-sm-2"><input type="range" class="form-range" id="frequencies5" min="1000" max="11000" value="{{index .Settings.Equalizer.Frequencies 4}}"></div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="form-check form-switch">
+                    <input type="hidden" role="switch" value="0" name="equalizerEnabled">
+                    <input class="form-check-input" type="checkbox" role="switch" value="1"
+                           {{if .Settings.Equalizer.Active}} checked {{end}}
+                           id="equalizerEnabled"
+                           name="equalizerEnabled"
+                    >
+
+                    <label class="form-check-label" for="equalizerEnabled">
+                        активно
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-sm-10">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" value="1"
+                           {{if .Settings.Equalizer.Position}} checked {{end}}
+                           id="equalizerPosition"
+                           name="equalizerPosition"
+                    >
+
+                    <label class="form-check-label" for="equalizerPosition">
+                        до преампа
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

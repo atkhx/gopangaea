@@ -8,13 +8,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-const ResponseLength = 15 // amtver.6.08.04.
+const ResponseLength = 8 // 6.08.04.
 
-var prefix = []byte{0x61, 0x6d, 0x74, 0x76, 0x65, 0x72, 0x0d} // amtver.
-var suffix = []byte{0x0a}                                     // .
+var suffix = []byte{0x0a} // .
 
 // todo сделать валидацию длинны в регулярке
-var re = regexp.MustCompile(string(prefix) + `(\d+)\.(\d+)\.(\d+)` + string(suffix))
+var re = regexp.MustCompile(`(\d+)\.(\d+)\.(\d+)` + string(suffix))
 
 type Response struct {
 	Major int

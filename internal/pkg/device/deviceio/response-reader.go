@@ -3,6 +3,7 @@ package deviceio
 import (
 	"bytes"
 	"io"
+	"strings"
 )
 
 type responseReader struct {
@@ -36,10 +37,16 @@ func (d *responseReader) ReadWithSkipTails(command string, length int) ([]byte, 
 	var checkTails = true
 	var result []byte
 
+	if idx := strings.Index(command, "\r"); idx > -1 {
+		command = string([]byte(command)[:idx])
+	}
+
 	separator := append([]byte(command), byte(0x0d))
 
 	skippedBytes := 0
-	for len(result) < length {
+	skippedBytesBuffer := []byte{}
+
+	for checkTails || len(result) < length {
 		readBuffer := make([]byte, 64)
 		n, errRead := d.reader.Read(readBuffer)
 		if errRead != nil {
@@ -50,18 +57,21 @@ func (d *responseReader) ReadWithSkipTails(command string, length int) ([]byte, 
 			break
 		}
 
+		readBuffer = readBuffer[:n]
 		if checkTails {
-			skippedBytes = bytes.Index(readBuffer[:n], separator)
+			skippedBytesBuffer = append(skippedBytesBuffer, readBuffer...)
+			skippedBytes = bytes.Index(skippedBytesBuffer, separator)
 			if skippedBytes == -1 {
 				continue
 			}
 
+			skippedBytes += len(separator)
 			checkTails = false
-			readBuffer = readBuffer[skippedBytes:n]
-			n -= skippedBytes
+
+			readBuffer = skippedBytesBuffer[skippedBytes:]
 		}
 
-		result = append(result, readBuffer[:n]...)
+		result = append(result, readBuffer...)
 	}
 	return result, nil
 }

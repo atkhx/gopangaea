@@ -1,0 +1,32 @@
+{{define "views/index/reverb"}}
+<div class="card">
+    <div class="card-header">
+        Reverb
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="reverbType" class="form-label">Скорость отражений</label>
+            <input type="range" class="form-range" id="reverbType" min="0" max="2" value="{{.Settings.EarlyReverb.Type}}">
+        </li>
+        <li class="list-group-item">
+            <label for="reverbVolume" class="form-label">Volume</label>
+            <input type="range" class="form-range" id="reverbVolume" min="0" max="31" value="{{.Settings.EarlyReverb.Volume}}">
+        </li>
+    </ul>
+
+    <div class="card-body">
+        <div class="form-check form-switch">
+            <input type="hidden" role="switch" value="0" name="reverbEnabled">
+            <input class="form-check-input" type="checkbox" role="switch" value="1"
+                   {{if .Settings.EarlyReverb.Active}} checked {{end}}
+                   id="reverbEnabled"
+                   name="reverbEnabled"
+            >
+            <label class="form-check-label" for="reverbEnabled">
+                активно
+            </label>
+        </div>
+    </div>
+</div>
+{{end}}

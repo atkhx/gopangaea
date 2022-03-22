@@ -1,6 +1,7 @@
 package form
 
 import (
+	get_impulse_names "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-names"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 )
 
@@ -57,6 +58,16 @@ func FromDto(dto get_settings.Settings) Form {
 			QualityFactor: dto.Equalizer.QualityFactor,
 		},
 	}
+}
+
+func DeviceImpulsesFromDto(response get_impulse_names.Response) (result DeviceImpulses) {
+	for _, name := range response.Names {
+		result = append(result, DeviceImpulse{
+			Name:     name,
+			Selected: false,
+		})
+	}
+	return
 }
 
 type Form struct {
@@ -134,4 +145,11 @@ type LowPassFilter struct {
 type HighPassFilter struct {
 	Active bool
 	Value  int
+}
+
+type DeviceImpulses []DeviceImpulse
+
+type DeviceImpulse struct {
+	Name     string
+	Selected bool
 }

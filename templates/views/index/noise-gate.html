@@ -1,0 +1,36 @@
+{{define "views/index/noise-gate"}}
+<div class="card">
+    <div class="card-header">
+        NoiseGate
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="noiseGateThresh" class="form-label">Threshold</label>
+            <input type="range" class="form-range"
+                   id="noiseGateThresh"
+                   name="noiseGateThresh"
+                   min="0" max="31" value="{{.Settings.NoiseGate.Thresh}}">
+        </li>
+        <li class="list-group-item">
+            <label for="noiseGateDecay" class="form-label">Decay</label>
+            <input type="range" class="form-range"
+                   id="noiseGateDecay"
+                   name="noiseGateDecay"
+                   min="0" max="31" value="{{.Settings.NoiseGate.Decay}}">
+        </li>
+    </ul>
+    <div class="card-body">
+        <div class="form-check form-switch">
+            <input type="hidden" role="switch" value="0" name="noiseGateEnabled">
+            <input class="form-check-input" type="checkbox" role="switch" value="1"
+                   {{if .Settings.NoiseGate.Active}} checked {{end}}
+                   id="noiseGateEnabled"
+                   name="noiseGateEnabled"
+            >
+            <label class="form-check-label" for="noiseGateEnabled">
+                активно
+            </label>
+        </div>
+    </div>
+</div>
+{{end}}

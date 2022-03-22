@@ -7,13 +7,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-// 00000000  67 6d 0d 30 31 0a                                 |gm.01.|
-const ResponseLength = 6 // gm.01.
+const ResponseLength = 3 // 01.
 
-var prefix = []byte{0x67, 0x6d, 0x0d} // gm.
-var suffix = []byte{0x0a}             // .
+var suffix = []byte{0x0a} // .
 
-var re = regexp.MustCompile(string(prefix) + `([\d]{2})` + string(suffix))
+var re = regexp.MustCompile(`([\d]{2})` + string(suffix))
 
 type Response struct {
 	Mode int

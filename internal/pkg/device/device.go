@@ -1,14 +1,19 @@
 package device
 
 import (
+	"log"
+	"time"
+
 	"github.com/atkhx/gopangaea/internal/pkg/commands/change-preset"
 	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
 	get_device "github.com/atkhx/gopangaea/internal/pkg/commands/get-device"
-	get_impulce_name "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-name"
+	get_impulse "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse"
+	get_impulse_name "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-name"
 	get_impulse_names "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-names"
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
+	save_preset "github.com/atkhx/gopangaea/internal/pkg/commands/save-preset"
 	set_compressor_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-state"
 	set_compressor_sustain "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-sustain"
 	set_compressor_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-volume"
@@ -19,6 +24,7 @@ import (
 	set_equalizer_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-state"
 	set_hp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-state"
 	set_hp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-value"
+	set_impulse "github.com/atkhx/gopangaea/internal/pkg/commands/set-impulse"
 	set_impulse_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-impulse-state"
 	set_lp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-state"
 	set_lp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-value"
@@ -41,6 +47,8 @@ import (
 	set_reverb_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-state"
 	set_reverb_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-type"
 	set_reverb_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-volume"
+	set_settings "github.com/atkhx/gopangaea/internal/pkg/commands/set-settings"
+	"github.com/pkg/errors"
 )
 
 type Command interface {
@@ -82,7 +90,10 @@ func (d *device) execCommand(command string, responseLength int) ([]byte, error)
 	if err := d.connection.WriteCommand(command); err != nil {
 		return nil, err
 	}
-
+	t := time.Now()
+	defer func() {
+		log.Println("time to read response:", time.Now().Sub(t))
+	}()
 	return d.connection.ReadResponse(command, responseLength)
 }
 
@@ -110,12 +121,74 @@ func (d *device) GetBank() (get_bank.Response, error) {
 	return get_bank.ParseResponse(b)
 }
 
-func (d *device) GetImpulseName() (get_impulce_name.Response, error) {
-	b, err := d.ExecCommand(get_impulce_name.Command{})
+func (d *device) SetCabinetFromDevice(value int) (bool, error) {
+	settings, err := d.GetSettings()
 	if err != nil {
-		return get_impulce_name.Response{}, err
+		return false, errors.Wrap(err, "get settings failed")
 	}
-	return get_impulce_name.ParseResponse(b)
+
+	bank, err := d.GetBank()
+	if err != nil {
+		return false, errors.Wrap(err, "get bank failed")
+	}
+
+	bankIndex := value / 10
+	presetIndex := value - 10*bankIndex
+
+	log.Println("settings", settings)
+	log.Println("currentBank", bank)
+	log.Println("bankIndex", bankIndex)
+	log.Println("presetIndex", presetIndex)
+
+	if _, err := d.ChangePreset(bankIndex, presetIndex); err != nil {
+		return false, errors.Wrap(err, "change preset failed")
+	}
+
+	impulse, err := d.GetImpulse()
+	if err != nil {
+		return false, errors.Wrap(err, "get impulse failed")
+	}
+
+	log.Println("target impulse:", impulse.Name)
+
+	if _, err := d.ChangePreset(bank.Bank, bank.Preset); err != nil {
+		return false, errors.Wrap(err, "change preset bak failed")
+	}
+
+	if _, err := d.SetImpulse(impulse.Name, impulse.Impulse); err != nil {
+		return false, errors.Wrap(err, "set impulse failed")
+	}
+
+	if _, err := d.SetSettings(settings.Bytes); err != nil {
+		return false, errors.Wrap(err, "set settings failed")
+	}
+
+	return true, nil
+}
+
+func (d *device) GetImpulseName() (get_impulse_name.Response, error) {
+	b, err := d.ExecCommand(get_impulse_name.Command{})
+	if err != nil {
+		return get_impulse_name.Response{}, err
+	}
+	return get_impulse_name.ParseResponse(b)
+}
+
+func (d *device) GetImpulse() (get_impulse.Response, error) {
+	b, err := d.ExecCommand(get_impulse.Command{})
+	if err != nil {
+		return get_impulse.Response{}, err
+	}
+	return get_impulse.ParseResponse(b)
+}
+
+func (d *device) SetImpulse(name string, impulse []byte) (set_impulse.Response, error) {
+	cmd := set_impulse.Command{Name: name, Impulse: impulse}
+	b, err := d.ExecCommand(cmd)
+	if err != nil {
+		return set_impulse.Response{}, err
+	}
+	return set_impulse.ParseResponse(b)
 }
 
 func (d *device) GetMode() (get_mode.Response, error) {
@@ -134,12 +207,34 @@ func (d *device) GetSettings() (get_settings.Response, error) {
 	return get_settings.ParseResponse(b)
 }
 
+func (d *device) SetSettings(settings []byte) (set_settings.Response, error) {
+	b, err := d.ExecCommand(set_settings.Command{Settings: settings})
+	if err != nil {
+		return set_settings.Response{}, err
+	}
+	return set_settings.ParseResponse(b)
+}
+
+var impulsesCacheResponse *get_impulse_names.Response = nil
+
 func (d *device) GetImpulseNames() (get_impulse_names.Response, error) {
+	if impulsesCacheResponse != nil {
+		return *impulsesCacheResponse, nil
+	}
+
 	b, err := d.ExecCommand(get_impulse_names.Command{})
 	if err != nil {
 		return get_impulse_names.Response{}, err
 	}
-	return get_impulse_names.ParseResponse(b)
+
+	r, err := get_impulse_names.ParseResponse(b)
+	if err != nil {
+		return r, err
+	}
+	return r, err
+
+	//impulsesCacheResponse = &r
+	//return *impulsesCacheResponse, nil
 }
 
 func (d *device) ChangePreset(bank, preset int) (change_preset.Response, error) {
@@ -556,4 +651,15 @@ func (d *device) SetEqualizerMixer(idx, value int) (set_equalizer_mixer.Response
 	}
 
 	return set_equalizer_mixer.ParseResponse(b)
+}
+
+func (d *device) SavePreset() (save_preset.Response, error) {
+	command := save_preset.New()
+
+	b, err := d.ExecCommand(command)
+	if err != nil {
+		return save_preset.Response{}, err
+	}
+
+	return save_preset.ParseResponse(b)
 }

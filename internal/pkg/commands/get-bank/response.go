@@ -8,12 +8,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-const ResponseLength = 8 // gb.0300.
+const ResponseLength = 5 // 0300.
 
-var prefix = []byte{0x67, 0x62, 0x0d} // gb.
-var suffix = []byte{0x0a}             // .
+var suffix = []byte{0x0a} // .
 
-var re = regexp.MustCompile(string(prefix) + `0(\d)0(\d)` + string(suffix))
+var re = regexp.MustCompile(`0(\d)0(\d)` + string(suffix))
 
 type Response struct {
 	Bank   int

@@ -1,0 +1,41 @@
+{{define "views/index/preamp"}}
+
+<div class="card">
+    <div class="card-header">
+        Preamp
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="preampLow" class="form-label">Low</label>
+            <input type="range" class="form-range" id="preampLow" min="0" max="127" value="{{index .Settings.PreAmp.Equalizer 0}}">
+        </li>
+        <li class="list-group-item">
+            <label for="preampMid" class="form-label">Mid</label>
+            <input type="range" class="form-range" id="preampMid" min="0" max="127" value="{{index .Settings.PreAmp.Equalizer 1}}">
+        </li>
+        <li class="list-group-item">
+            <label for="preampHigh" class="form-label">High</label>
+            <input type="range" class="form-range" id="preampHigh" min="0" max="127" value="{{index .Settings.PreAmp.Equalizer 2}}">
+        </li>
+        <li class="list-group-item">
+            <label for="preampVolume" class="form-label">Volume</label>
+            <input type="range" class="form-range" id="preampVolume" min="0" max="31" value="{{.Settings.PreAmp.Volume}}">
+        </li>
+    </ul>
+    <div class="card-body">
+        <div class="form-check form-switch">
+            <input type="hidden" role="switch" value="0" name="preampEnabled">
+            <input class="form-check-input" type="checkbox" role="switch" value="1"
+                   {{if .Settings.PreAmp.Active}} checked {{end}}
+                   id="preampEnabled"
+                   name="preampEnabled"
+            >
+            <label class="form-check-label" for="preampEnabled">
+                активно
+            </label>
+        </div>
+    </div>
+</div>
+
+{{end}}

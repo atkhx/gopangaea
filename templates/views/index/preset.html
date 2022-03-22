@@ -1,0 +1,45 @@
+{{define "views/index/preset"}}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-auto">
+                <div class="btn-group-vertical btn-group-sm" role="group">
+                    <button class="btn btn-default border-secondary dropdown-toggle" type="button" id="bankDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                        Bank {{.Bank}}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="bankDropdown">
+                        <li><a class="dropdown-item" href="#">0</a></li>
+                        <li><a class="dropdown-item" href="#">1</a></li>
+                        <li><a class="dropdown-item" href="#">2</a></li>
+                        <li><a class="dropdown-item" href="#">3</a></li>
+                        <li><a class="dropdown-item" href="#">4</a></li>
+                        <li><a class="dropdown-item" href="#">5</a></li>
+                        <li><a class="dropdown-item" href="#">6</a></li>
+                        <li><a class="dropdown-item" href="#">7</a></li>
+                        <li><a class="dropdown-item" href="#">8</a></li>
+                        <li><a class="dropdown-item" href="#">9</a></li>
+                    </ul>
+
+                    <button class="btn btn-default border-secondary dropdown-toggle" type="button" id="presetDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                        Preset {{.Preset}}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="presetDropdown">
+                        <li><a class="dropdown-item" href="#">0</a></li>
+                        <li><a class="dropdown-item" href="#">1</a></li>
+                        <li><a class="dropdown-item" href="#">2</a></li>
+                        <li><a class="dropdown-item" href="#">3</a></li>
+                        <li><a class="dropdown-item" href="#">4</a></li>
+                        <li><a class="dropdown-item" href="#">5</a></li>
+                        <li><a class="dropdown-item" href="#">6</a></li>
+                        <li><a class="dropdown-item" href="#">7</a></li>
+                        <li><a class="dropdown-item" href="#">8</a></li>
+                        <li><a class="dropdown-item" href="#">9</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col"></div>
+        </div>
+    </div>
+</div>
+{{end}}

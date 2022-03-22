@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-const ResponseLength = 90
+const ResponseLength = 87
 
 type Response struct {
 	Bytes []byte
@@ -19,7 +19,7 @@ func ParseResponse(data []byte) (Response, error) {
 	if len(data) != ResponseLength {
 		return Response{}, errors.New(fmt.Sprintf("invalid data length: %d", len(data)))
 	}
-	return Response{Bytes: convertResponse(data[3:89])}, nil
+	return Response{Bytes: convertResponse(data[:86])}, nil
 }
 
 func (r Response) String() string {
@@ -44,7 +44,7 @@ func (r Response) Settings() Settings {
 	lpv := int(math.Pow(195.0-float64(int(r.Bytes[36])), 2)*(19000.0/math.Pow(195.0, 2.0)) + 1000.0)
 	hpv := (int(r.Bytes[37])*980)/255 + 20
 
-	prh := int(r.Bytes[19])
+	prh := int(r.Bytes[19]) - 192
 	if prh < 0 {
 		prh = 256 + prh
 	}

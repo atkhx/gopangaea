@@ -1,22 +1,22 @@
 $('document').ready(function () {
     $('#controlForm input').change(function () {
         if (this.type === 'checkbox') {
-            // $('#debug').html('changed input ' + this.id + ':' + this.checked)
+            $('#debug').html('changed input ' + this.id + ':' + this.checked)
             sendChange(this.id, this.checked ? "true" : "false");
         } else {
-            // $('#debug').html('changed input' + this.id + ':' + this.value)
+            $('#debug').html('changed input' + this.id + ':' + this.value)
             $('#'+this.id+'_val').text(this.value);
             sendChange(this.id, this.value);
         }
     })
 
     $('#controlForm select').change(function () {
-        // $('#debug').html('changed select' + this.id + ':' + this.value);
+        $('#debug').html('changed select' + this.id + ':' + this.value);
         sendChange(this.id, this.value);
     })
 
     $('#controlForm input[type=range]').each(function (input) {
-        // $('#debug').html('' + this.id + ':' + this.value);
+        $('#debug').html('' + this.id + ':' + this.value);
         let label=$('label[for='+this.id+']');
         label.css("display", "block")
         label.html(
@@ -25,7 +25,25 @@ $('document').ready(function () {
         )
     })
 
+    $('#savePresetBtn').click(function () {
+        $.ajax({
+            url: '/save-preset',
+            type: 'POST',
+            success: function () {
+                document.location.href = '/'
+            }
+        });
+    })
 
+    $('#resetPresetBtn').click(function () {
+        $.ajax({
+            url: '/reset-preset',
+            type: 'POST',
+            success: function () {
+                document.location.href = '/'
+            }
+        });
+    })
 });
 
 function sendChange(name, value) {
