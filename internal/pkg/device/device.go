@@ -48,12 +48,17 @@ import (
 	set_reverb_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-type"
 	set_reverb_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-volume"
 	set_settings "github.com/atkhx/gopangaea/internal/pkg/commands/set-settings"
+	"github.com/atkhx/gopangaea/internal/pkg/device/deviceio"
 	"github.com/pkg/errors"
 )
 
 type Command interface {
 	GetCommand() string
 	GetResponseLength() int
+}
+
+type CommandSetter interface {
+	GetCommand() string
 }
 
 type Connection interface {
@@ -78,6 +83,20 @@ func (d *device) IsConnected() bool {
 
 func (d *device) ExecCommand(command Command) ([]byte, error) {
 	return d.execCommand(command.GetCommand(), command.GetResponseLength())
+}
+
+type Response interface {
+	GetLength() int
+	Parse([]byte) error
+}
+
+func (d *device) ExecCommandSetter(command CommandSetter, response Response) error {
+	b, err := d.execCommand(command.GetCommand(), response.GetLength())
+	if err != nil {
+		return err
+	}
+
+	return response.Parse(b)
 }
 
 func (d *device) execCommand(command string, responseLength int) ([]byte, error) {
@@ -182,13 +201,14 @@ func (d *device) GetImpulse() (get_impulse.Response, error) {
 	return get_impulse.ParseResponse(b)
 }
 
-func (d *device) SetImpulse(name string, impulse []byte) (set_impulse.Response, error) {
+func (d *device) SetImpulse(name string, impulse []byte) (bool, error) {
 	cmd := set_impulse.Command{Name: name, Impulse: impulse}
-	b, err := d.ExecCommand(cmd)
-	if err != nil {
-		return set_impulse.Response{}, err
+	r := deviceio.NewResponseBoolWithCustomEnd(set_impulse.ResponseSuffix)
+
+	if err := d.ExecCommandSetter(cmd, r); err != nil {
+		return false, err
 	}
-	return set_impulse.ParseResponse(b)
+	return r.Success(), nil
 }
 
 func (d *device) GetMode() (get_mode.Response, error) {
@@ -207,12 +227,13 @@ func (d *device) GetSettings() (get_settings.Response, error) {
 	return get_settings.ParseResponse(b)
 }
 
-func (d *device) SetSettings(settings []byte) (set_settings.Response, error) {
-	b, err := d.ExecCommand(set_settings.Command{Settings: settings})
-	if err != nil {
-		return set_settings.Response{}, err
+func (d *device) SetSettings(settings []byte) (bool, error) {
+	r := deviceio.NewResponseBoolWithCustomEnd(set_settings.ResponseSuffix)
+
+	if err := d.ExecCommandSetter(set_settings.Command{Settings: settings}, r); err != nil {
+		return false, err
 	}
-	return set_settings.ParseResponse(b)
+	return r.Success(), nil
 }
 
 var impulsesCacheResponse *get_impulse_names.Response = nil
@@ -231,435 +252,390 @@ func (d *device) GetImpulseNames() (get_impulse_names.Response, error) {
 	if err != nil {
 		return r, err
 	}
-	return r, err
+	//return r, err
 
-	//impulsesCacheResponse = &r
-	//return *impulsesCacheResponse, nil
+	impulsesCacheResponse = &r
+	return *impulsesCacheResponse, nil
 }
 
-func (d *device) ChangePreset(bank, preset int) (change_preset.Response, error) {
+func (d *device) ChangePreset(bank, preset int) (bool, error) {
 	command, err := change_preset.NewWithArgs(bank, preset)
 	if err != nil {
-		return change_preset.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return change_preset.Response{}, err
+	r := deviceio.NewResponseBoolWithEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return change_preset.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetMode(value int) (set_mode.Response, error) {
+func (d *device) SetMode(value int) (bool, error) {
 	command, err := set_mode.NewWithArgs(value)
 	if err != nil {
-		return set_mode.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_mode.Response{}, err
+	r := deviceio.NewResponseBoolWithoutEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_mode.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetMasterVolume(value int) (set_master_volume.Response, error) {
+func (d *device) SetMasterVolume(value int) (bool, error) {
 	command, err := set_master_volume.NewWithArgs(value)
 	if err != nil {
-		return set_master_volume.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_master_volume.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_master_volume.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetReverbState(value bool) (set_reverb_state.Response, error) {
-	command := set_reverb_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_reverb_state.Response{}, err
+func (d *device) SetReverbState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_reverb_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_reverb_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetReverbType(value int) (set_reverb_type.Response, error) {
+func (d *device) SetReverbType(value int) (bool, error) {
 	command, err := set_reverb_type.NewWithArgs(value)
 	if err != nil {
-		return set_reverb_type.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_reverb_type.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_reverb_type.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetReverbVolume(value int) (set_reverb_volume.Response, error) {
+func (d *device) SetReverbVolume(value int) (bool, error) {
 	command, err := set_reverb_volume.NewWithArgs(value)
 	if err != nil {
-		return set_reverb_volume.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_reverb_volume.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_reverb_volume.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPresenceState(value bool) (set_presence_state.Response, error) {
-	command := set_presence_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_presence_state.Response{}, err
+func (d *device) SetPresenceState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_presence_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_presence_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPresenceVolume(value int) (set_presence_value.Response, error) {
+func (d *device) SetPresenceVolume(value int) (bool, error) {
 	command, err := set_presence_value.NewWithArgs(value)
 	if err != nil {
-		return set_presence_value.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_presence_value.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_presence_value.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetLPFilterState(value bool) (set_lp_filter_state.Response, error) {
-	command := set_lp_filter_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_lp_filter_state.Response{}, err
+func (d *device) SetLPFilterState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_lp_filter_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_lp_filter_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetLPFilterValue(value int) (set_lp_filter_value.Response, error) {
+func (d *device) SetLPFilterValue(value int) (bool, error) {
 	command, err := set_lp_filter_value.NewWithArgs(value)
 	if err != nil {
-		return set_lp_filter_value.Response{}, err
-	}
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_lp_filter_value.Response{}, err
+		return false, err
 	}
 
-	return set_lp_filter_value.ParseResponse(b)
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
+	}
+	return r.Success(), nil
 }
 
-func (d *device) SetHPFilterState(value bool) (set_hp_filter_state.Response, error) {
-	command := set_hp_filter_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_hp_filter_state.Response{}, err
+func (d *device) SetHPFilterState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_hp_filter_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_hp_filter_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetHPFilterValue(value int) (set_hp_filter_value.Response, error) {
+func (d *device) SetHPFilterValue(value int) (bool, error) {
 	command, err := set_hp_filter_value.NewWithArgs(value)
 	if err != nil {
-		return set_hp_filter_value.Response{}, err
-	}
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_hp_filter_value.Response{}, err
+		return false, err
 	}
 
-	return set_hp_filter_value.ParseResponse(b)
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
+	}
+	return r.Success(), nil
 }
 
-func (d *device) SetImpulseState(value bool) (set_impulse_state.Response, error) {
-	command := set_impulse_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_impulse_state.Response{}, err
+func (d *device) SetImpulseState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_impulse_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_impulse_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPreampState(value bool) (set_preamp_state.Response, error) {
-	command := set_preamp_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_preamp_state.Response{}, err
+func (d *device) SetPreampState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_preamp_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_preamp_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPreampVolume(volume int) (set_preamp_volume.Response, error) {
+func (d *device) SetPreampVolume(volume int) (bool, error) {
 	command, err := set_preamp_volume.NewWithArgs(volume)
 	if err != nil {
-		return set_preamp_volume.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_preamp_volume.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_preamp_volume.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPreampHigh(high int) (set_preamp_high.Response, error) {
+func (d *device) SetPreampHigh(high int) (bool, error) {
 	command, err := set_preamp_high.NewWithArgs(high)
 	if err != nil {
-		return set_preamp_high.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_preamp_high.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_preamp_high.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPreampMid(mid int) (set_preamp_mid.Response, error) {
+func (d *device) SetPreampMid(mid int) (bool, error) {
 	command, err := set_preamp_mid.NewWithArgs(mid)
 	if err != nil {
-		return set_preamp_mid.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_preamp_mid.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_preamp_mid.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPreampLow(low int) (set_preamp_low.Response, error) {
+func (d *device) SetPreampLow(low int) (bool, error) {
 	command, err := set_preamp_low.NewWithArgs(low)
 	if err != nil {
-		return set_preamp_low.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_preamp_low.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_preamp_low.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPowerAmpState(value bool) (set_poweramp_state.Response, error) {
-	command := set_poweramp_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_poweramp_state.Response{}, err
+func (d *device) SetPowerAmpState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_poweramp_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_poweramp_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPowerAmpType(value int) (set_poweramp_type.Response, error) {
+func (d *device) SetPowerAmpType(value int) (bool, error) {
 	command, err := set_poweramp_type.NewWithArgs(value)
 	if err != nil {
-		return set_poweramp_type.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_poweramp_type.Response{}, err
+	r := deviceio.NewResponseBoolWithEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_poweramp_type.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPowerAmpVolume(volume int) (set_poweramp_volume.Response, error) {
+func (d *device) SetPowerAmpVolume(volume int) (bool, error) {
 	command, err := set_poweramp_volume.NewWithArgs(volume)
 	if err != nil {
-		return set_poweramp_volume.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_poweramp_volume.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_poweramp_volume.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetPowerAmpSlave(slave int) (set_poweramp_slave.Response, error) {
+func (d *device) SetPowerAmpSlave(slave int) (bool, error) {
 	command, err := set_poweramp_slave.NewWithArgs(slave)
 	if err != nil {
-		return set_poweramp_slave.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_poweramp_slave.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_poweramp_slave.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetCompressorState(value bool) (set_compressor_state.Response, error) {
-	command := set_compressor_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_compressor_state.Response{}, err
+func (d *device) SetCompressorState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_compressor_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_compressor_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetCompressorSustain(value int) (set_compressor_sustain.Response, error) {
+func (d *device) SetCompressorSustain(value int) (bool, error) {
 	command, err := set_compressor_sustain.NewWithArgs(value)
 	if err != nil {
-		return set_compressor_sustain.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_compressor_sustain.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_compressor_sustain.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetCompressorVolume(value int) (set_compressor_volume.Response, error) {
+func (d *device) SetCompressorVolume(value int) (bool, error) {
 	command, err := set_compressor_volume.NewWithArgs(value)
 	if err != nil {
-		return set_compressor_volume.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_compressor_volume.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_compressor_volume.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetNoiseGateState(value bool) (set_noisegate_state.Response, error) {
-	command := set_noisegate_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_noisegate_state.Response{}, err
+func (d *device) SetNoiseGateState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_noisegate_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_noisegate_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetNoiseGateThresh(value int) (set_noisegate_thresh.Response, error) {
+func (d *device) SetNoiseGateThresh(value int) (bool, error) {
 	command, err := set_noisegate_thresh.NewWithArgs(value)
 	if err != nil {
-		return set_noisegate_thresh.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_noisegate_thresh.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_noisegate_thresh.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetNoiseGateDecay(value int) (set_noisegate_decay.Response, error) {
+func (d *device) SetNoiseGateDecay(value int) (bool, error) {
 	command, err := set_noisegate_decay.NewWithArgs(value)
 	if err != nil {
-		return set_noisegate_decay.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_noisegate_decay.Response{}, err
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_noisegate_decay.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetEqualizerState(value bool) (set_equalizer_state.Response, error) {
-	command := set_equalizer_state.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_equalizer_state.Response{}, err
+func (d *device) SetEqualizerState(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithoutEnd()
+	if err := d.ExecCommandSetter(set_equalizer_state.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_equalizer_state.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetEqualizerPosition(value bool) (set_equalizer_position.Response, error) {
-	command := set_equalizer_position.NewWithArgs(value)
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_equalizer_position.Response{}, err
+func (d *device) SetEqualizerPosition(value bool) (bool, error) {
+	r := deviceio.NewResponseBoolWithZeros()
+	if err := d.ExecCommandSetter(set_equalizer_position.NewWithArgs(value), r); err != nil {
+		return false, err
 	}
-
-	return set_equalizer_position.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetEqualizerQuantityFactor(idx, value int) (set_equalizer_quantity_factor.Response, error) {
+func (d *device) SetEqualizerQuantityFactor(idx, value int) (bool, error) {
 	command, err := set_equalizer_quantity_factor.NewWithArgs(idx, value)
 	if err != nil {
-		return set_equalizer_quantity_factor.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_equalizer_quantity_factor.Response{}, err
+	r := deviceio.NewResponseBoolWithoutEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_equalizer_quantity_factor.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetEqualizerFrequencies(idx, value int) (set_equalizer_frequencies.Response, error) {
+func (d *device) SetEqualizerFrequencies(idx, value int) (bool, error) {
 	command, err := set_equalizer_frequencies.NewWithArgs(idx, value)
 	if err != nil {
-		return set_equalizer_frequencies.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_equalizer_frequencies.Response{}, err
+	r := deviceio.NewResponseBoolWithoutEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_equalizer_frequencies.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SetEqualizerMixer(idx, value int) (set_equalizer_mixer.Response, error) {
+func (d *device) SetEqualizerMixer(idx, value int) (bool, error) {
 	command, err := set_equalizer_mixer.NewWithArgs(idx, value)
 	if err != nil {
-		return set_equalizer_mixer.Response{}, err
+		return false, err
 	}
 
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return set_equalizer_mixer.Response{}, err
+	r := deviceio.NewResponseBoolWithoutEnd()
+	if err := d.ExecCommandSetter(command, r); err != nil {
+		return false, err
 	}
-
-	return set_equalizer_mixer.ParseResponse(b)
+	return r.Success(), nil
 }
 
-func (d *device) SavePreset() (save_preset.Response, error) {
-	command := save_preset.New()
-
-	b, err := d.ExecCommand(command)
-	if err != nil {
-		return save_preset.Response{}, err
+func (d *device) SavePreset() (bool, error) {
+	r := deviceio.NewResponseBoolWithEnd()
+	if err := d.ExecCommandSetter(save_preset.New(), r); err != nil {
+		return false, err
 	}
-
-	return save_preset.ParseResponse(b)
+	return r.Success(), nil
 }

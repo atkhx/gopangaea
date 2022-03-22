@@ -40,11 +40,3 @@ type Command struct {
 func (c Command) GetCommand() string {
 	return fmt.Sprintf("%s %d %x", deviceCommand, c.index-1, 16+c.value)
 }
-
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
-}

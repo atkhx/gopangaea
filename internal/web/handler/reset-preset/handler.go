@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	change_preset "github.com/atkhx/gopangaea/internal/pkg/commands/change-preset"
 	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
 )
 
 type Device interface {
 	GetBank() (get_bank.Response, error)
-	ChangePreset(bank, preset int) (change_preset.Response, error)
+	ChangePreset(bank, preset int) (bool, error)
 }
 
 type handler struct {

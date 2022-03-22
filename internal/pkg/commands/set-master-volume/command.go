@@ -37,9 +37,10 @@ func (c Command) GetCommand() string {
 }
 
 func (c Command) GetResponseLength() int {
-	return len(successResponse)
+	return 3
+	//return len(successResponse)
 }
 
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
-}
+//func (c Command) ParseResponse(b []byte) (interface{}, error) {
+//	return ParseResponse(b)
+//}

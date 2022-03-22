@@ -6,6 +6,9 @@ const (
 	deviceCommand = "gs"
 )
 
+// "gsEND.."
+var ResponseSuffix = []byte{0x67, 0x73, 0x45, 0x4e, 0x44, 0x0a, 0x0d}
+
 type Command struct {
 	Settings []byte
 }
@@ -16,12 +19,4 @@ func New() *Command {
 
 func (c Command) GetCommand() string {
 	return fmt.Sprintf("%s 1\r%x\r", deviceCommand, c.Settings)
-}
-
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
 }

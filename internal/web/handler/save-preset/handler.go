@@ -3,12 +3,10 @@ package save_preset
 import (
 	"fmt"
 	"net/http"
-
-	save_preset "github.com/atkhx/gopangaea/internal/pkg/commands/save-preset"
 )
 
 type Device interface {
-	SavePreset() (save_preset.Response, error)
+	SavePreset() (bool, error)
 }
 
 type handler struct {

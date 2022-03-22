@@ -26,11 +26,3 @@ func (c Command) GetCommand() string {
 	}
 	return fmt.Sprintf("%s 0", deviceCommand)
 }
-
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
-}

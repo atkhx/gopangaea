@@ -35,11 +35,3 @@ func (c Command) GetCommand() string {
 	fmt.Println(fmt.Sprintf("%s %d", deviceCommand, c.value))
 	return fmt.Sprintf("%s %d", deviceCommand, c.value)
 }
-
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
-}

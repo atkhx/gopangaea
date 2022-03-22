@@ -33,10 +33,6 @@ func (c Command) GetCommand() string {
 	return fmt.Sprintf("%s %x", deviceCommand, 10*c.bank+c.preset)
 }
 
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
 func Validate(bank, preset int) error {
 	if bank < 0 || bank > 9 {
 		return errors.New("bank overflow")
@@ -46,8 +42,4 @@ func Validate(bank, preset int) error {
 		return errors.New("preset overflow")
 	}
 	return nil
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
 }

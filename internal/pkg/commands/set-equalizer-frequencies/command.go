@@ -55,11 +55,3 @@ func (c Command) GetCommand() string {
 	val := 256 + (c.value-def)/koef
 	return fmt.Sprintf("%s %d %x", deviceCommand, c.index-1, val)
 }
-
-func (c Command) GetResponseLength() int {
-	return len(successResponse)
-}
-
-func (c Command) ParseResponse(b []byte) (interface{}, error) {
-	return ParseResponse(b)
-}

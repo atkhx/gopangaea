@@ -9,84 +9,52 @@ import (
 	"regexp"
 	"strconv"
 
-	set_compressor_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-state"
-	set_compressor_sustain "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-sustain"
-	set_compressor_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-volume"
-	set_equalizer_frequencies "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-frequencies"
-	set_equalizer_mixer "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-mixer"
-	set_equalizer_position "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-position"
-	set_equalizer_quantity_factor "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-quantity-factor"
-	set_equalizer_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-equalizer-state"
-	set_hp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-state"
-	set_hp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-hp-filter-value"
-	set_impulse_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-impulse-state"
-	set_lp_filter_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-state"
-	set_lp_filter_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-lp-filter-value"
-	set_master_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-master-volume"
-	set_mode "github.com/atkhx/gopangaea/internal/pkg/commands/set-mode"
-	set_noisegate_decay "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-decay"
-	set_noisegate_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-state"
-	set_noisegate_thresh "github.com/atkhx/gopangaea/internal/pkg/commands/set-noisegate-thresh"
-	set_poweramp_slave "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-slave"
-	set_poweramp_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-state"
-	set_poweramp_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-type"
-	set_poweramp_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-poweramp-volume"
-	set_preamp_high "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-high"
-	set_preamp_low "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-low"
-	set_preamp_mid "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-mid"
-	set_preamp_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-state"
-	set_preamp_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-preamp-volume"
-	set_presence_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-state"
-	set_presence_value "github.com/atkhx/gopangaea/internal/pkg/commands/set-presence-value"
-	set_reverb_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-state"
-	set_reverb_type "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-type"
-	set_reverb_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-volume"
 	"github.com/pkg/errors"
 )
 
 type Device interface {
-	SetMode(value int) (set_mode.Response, error)
-	SetMasterVolume(value int) (set_master_volume.Response, error)
+	SetMode(value int) (bool, error)
+	SetMasterVolume(value int) (bool, error)
 	SetCabinetFromDevice(value int) (bool, error)
 
-	SetReverbState(value bool) (set_reverb_state.Response, error)
-	SetReverbType(value int) (set_reverb_type.Response, error)
-	SetReverbVolume(value int) (set_reverb_volume.Response, error)
+	SetReverbState(value bool) (bool, error)
+	SetReverbType(value int) (bool, error)
+	SetReverbVolume(value int) (bool, error)
 
-	SetPreampState(value bool) (set_preamp_state.Response, error)
-	SetPreampVolume(volume int) (set_preamp_volume.Response, error)
-	SetPreampHigh(high int) (set_preamp_high.Response, error)
-	SetPreampMid(mid int) (set_preamp_mid.Response, error)
-	SetPreampLow(low int) (set_preamp_low.Response, error)
+	SetPreampState(value bool) (bool, error)
+	SetPreampVolume(volume int) (bool, error)
+	SetPreampHigh(high int) (bool, error)
+	SetPreampMid(mid int) (bool, error)
+	SetPreampLow(low int) (bool, error)
 
-	SetPowerAmpState(value bool) (set_poweramp_state.Response, error)
-	SetPowerAmpType(value int) (set_poweramp_type.Response, error)
-	SetPowerAmpSlave(slave int) (set_poweramp_slave.Response, error)
-	SetPowerAmpVolume(volume int) (set_poweramp_volume.Response, error)
+	SetPowerAmpState(value bool) (bool, error)
+	SetPowerAmpType(value int) (bool, error)
+	SetPowerAmpSlave(slave int) (bool, error)
+	SetPowerAmpVolume(volume int) (bool, error)
 
-	SetPresenceState(value bool) (set_presence_state.Response, error)
-	SetPresenceVolume(value int) (set_presence_value.Response, error)
+	SetPresenceState(value bool) (bool, error)
+	SetPresenceVolume(value int) (bool, error)
 
-	SetImpulseState(value bool) (set_impulse_state.Response, error)
+	SetImpulseState(value bool) (bool, error)
 
-	SetNoiseGateState(value bool) (set_noisegate_state.Response, error)
-	SetNoiseGateThresh(value int) (set_noisegate_thresh.Response, error)
-	SetNoiseGateDecay(value int) (set_noisegate_decay.Response, error)
+	SetNoiseGateState(value bool) (bool, error)
+	SetNoiseGateThresh(value int) (bool, error)
+	SetNoiseGateDecay(value int) (bool, error)
 
-	SetCompressorState(value bool) (set_compressor_state.Response, error)
-	SetCompressorSustain(value int) (set_compressor_sustain.Response, error)
-	SetCompressorVolume(value int) (set_compressor_volume.Response, error)
+	SetCompressorState(value bool) (bool, error)
+	SetCompressorSustain(value int) (bool, error)
+	SetCompressorVolume(value int) (bool, error)
 
-	SetLPFilterState(value bool) (set_lp_filter_state.Response, error)
-	SetLPFilterValue(value int) (set_lp_filter_value.Response, error)
-	SetHPFilterState(value bool) (set_hp_filter_state.Response, error)
-	SetHPFilterValue(value int) (set_hp_filter_value.Response, error)
+	SetLPFilterState(value bool) (bool, error)
+	SetLPFilterValue(value int) (bool, error)
+	SetHPFilterState(value bool) (bool, error)
+	SetHPFilterValue(value int) (bool, error)
 
-	SetEqualizerState(value bool) (set_equalizer_state.Response, error)
-	SetEqualizerPosition(value bool) (set_equalizer_position.Response, error)
-	SetEqualizerQuantityFactor(idx, value int) (set_equalizer_quantity_factor.Response, error)
-	SetEqualizerMixer(idx, value int) (set_equalizer_mixer.Response, error)
-	SetEqualizerFrequencies(idx, value int) (set_equalizer_frequencies.Response, error)
+	SetEqualizerState(value bool) (bool, error)
+	SetEqualizerPosition(value bool) (bool, error)
+	SetEqualizerQuantityFactor(idx, value int) (bool, error)
+	SetEqualizerMixer(idx, value int) (bool, error)
+	SetEqualizerFrequencies(idx, value int) (bool, error)
 }
 
 type Renderer interface {
