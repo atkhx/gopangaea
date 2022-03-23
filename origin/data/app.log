@@ -1,0 +1,411 @@
+!OPEN
+vendor: 1155  product:  22336  location:  "/dev/cu.usbmodemxcv1"
+sendCount 0
+send "amtdev\r\n"
+slReadyRead "amtdev\r04\nEND\n"
+getName 4
+sendCount 1
+send "amtver\r\n"
+slReadyRead "amtver\r6.08.04\n"
+getVer "6.08.04"
+"6.08.04"
+sendCount 0
+send "rns\r\n"
+slReadyRead "rns\r"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_0__."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_2__."
+slReadyRead "wav\n01"
+slReadyRead "\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Co"
+slReadyRead "ne_4_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Edge_2_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Edge_4_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "fe______________68_DLX__________1x12_G12V-70____Cond____Edge_45_"
+slReadyRead ".wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cap_2__.wav\n01\nEN"
+slReadyRead "D\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cone_0_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Cone_4_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "ma______________1960A___________4x12_G12T-75____Cond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__.wav\n01\nEND"
+slReadyRead "\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cap_4__.wav\n01\n"
+slReadyRead "END\n"
+slReadyRead "ma_"
+slReadyRead "_____________1960AV__________4x12_Vintage_30_Cond____Cone_0_.wav"
+slReadyRead "\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cap_2__."
+slReadyRead "wav\n"
+slReadyRead "01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Edge_0_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "or______________112_____________1x12_Vintage_30_Cond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cap_0__."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cap_2__.wav\n"
+slReadyRead "01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cap_4__.wav\n01\nE"
+slReadyRead "ND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cone_2_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Cone_4_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Edge_0_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "or______________212_____________2x12_Vintage_30_Cond____Edge_45_.wav\n01\nEND"
+slReadyRead "\n"
+slReadyRead "or______________212_Ope"
+slReadyRead "n________2x12_Vintage_30_Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Cone_4_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Edge_2_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "or______________212_Open________2x12_Vintage_30_Cond____Edge_45_"
+slReadyRead ".wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Edge_0_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "vo______________AC15_Green______1x12_Greenback__Cond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_4__."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_0_.wav\n"
+slReadyRead "01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_"
+slReadyRead "BlueCond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_4_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_45_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cap_0__.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cap_2__.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cap_4__.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cone_0_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cone_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Cone_4_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Edge_0_."
+slReadyRead "wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Green"
+slReadyRead "back__Cond____Edge_2_.wav\n01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Edge_4_.wav\n"
+slReadyRead "01\nEND\n"
+slReadyRead "vo______________AC30_Green______2x12_Greenback__Cond____Edge_45_.wav\n01\nEND\n"
+qml: kolvo 101
+qml: 0 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_0__.wav
+qml: nomRow 0   nomElement 0  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_0__.wav
+qml: 0 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cap_0__.wav
+qml: nomRow 1   nomElement 0  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cap_0__.wav
+qml: 0 2 ma______________1960A___________4x12_G12T-75____Cond____Cap_0__.wav
+qml: nomRow 2   nomElement 0  name: ma______________1960A___________4x12_G12T-75____Cond____Cap_0__.wav
+qml: 0 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__.wav
+qml: nomRow 3   nomElement 0  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__.wav
+qml: 0 4 or______________112_____________1x12_Vintage_30_Cond____Cap_0__.wav
+qml: nomRow 4   nomElement 0  name: or______________112_____________1x12_Vintage_30_Cond____Cap_0__.wav
+qml: 0 5 or______________212_____________2x12_Vintage_30_Cond____Cap_0__.wav
+qml: nomRow 5   nomElement 0  name: or______________212_____________2x12_Vintage_30_Cond____Cap_0__.wav
+qml: 0 6 or______________212_Open________2x12_Vintage_30_Cond____Cap_0__.wav
+qml: nomRow 6   nomElement 0  name: or______________212_Open________2x12_Vintage_30_Cond____Cap_0__.wav
+qml: 0 7 vo______________AC15_Green______1x12_Greenback__Cond____Cap_0__.wav
+qml: nomRow 7   nomElement 0  name: vo______________AC15_Green______1x12_Greenback__Cond____Cap_0__.wav
+qml: 0 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_0__.wav
+qml: nomRow 8   nomElement 0  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_0__.wav
+qml: 0 9 vo______________AC30_Green______2x12_Greenback__Cond____Cap_0__.wav
+qml: nomRow 9   nomElement 0  name: vo______________AC30_Green______2x12_Greenback__Cond____Cap_0__.wav
+qml: 1 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_2__.wav
+qml: nomRow 0   nomElement 1  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_2__.wav
+qml: 1 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cap_2__.wav
+qml: nomRow 1   nomElement 1  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cap_2__.wav
+qml: 1 2 ma______________1960A___________4x12_G12T-75____Cond____Cap_2__.wav
+qml: nomRow 2   nomElement 1  name: ma______________1960A___________4x12_G12T-75____Cond____Cap_2__.wav
+qml: 1 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cap_2__.wav
+qml: nomRow 3   nomElement 1  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cap_2__.wav
+qml: 1 4 or______________112_____________1x12_Vintage_30_Cond____Cap_2__.wav
+qml: nomRow 4   nomElement 1  name: or______________112_____________1x12_Vintage_30_Cond____Cap_2__.wav
+qml: 1 5 or______________212_____________2x12_Vintage_30_Cond____Cap_2__.wav
+qml: nomRow 5   nomElement 1  name: or______________212_____________2x12_Vintage_30_Cond____Cap_2__.wav
+qml: 1 6 or______________212_Open________2x12_Vintage_30_Cond____Cap_2__.wav
+qml: nomRow 6   nomElement 1  name: or______________212_Open________2x12_Vintage_30_Cond____Cap_2__.wav
+qml: 1 7 vo______________AC15_Green______1x12_Greenback__Cond____Cap_2__.wav
+qml: nomRow 7   nomElement 1  name: vo______________AC15_Green______1x12_Greenback__Cond____Cap_2__.wav
+qml: 1 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_2__.wav
+qml: nomRow 8   nomElement 1  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_2__.wav
+qml: 1 9 vo______________AC30_Green______2x12_Greenback__Cond____Cap_2__.wav
+qml: nomRow 9   nomElement 1  name: vo______________AC30_Green______2x12_Greenback__Cond____Cap_2__.wav
+qml: 2 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_4__.wav
+qml: nomRow 0   nomElement 2  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cap_4__.wav
+qml: 2 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cap_4__.wav
+qml: nomRow 1   nomElement 2  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cap_4__.wav
+qml: 2 2 ma______________1960A___________4x12_G12T-75____Cond____Cap_4__.wav
+qml: nomRow 2   nomElement 2  name: ma______________1960A___________4x12_G12T-75____Cond____Cap_4__.wav
+qml: 2 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cap_4__.wav
+qml: nomRow 3   nomElement 2  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cap_4__.wav
+qml: 2 4 or______________112_____________1x12_Vintage_30_Cond____Cap_4__.wav
+qml: nomRow 4   nomElement 2  name: or______________112_____________1x12_Vintage_30_Cond____Cap_4__.wav
+qml: 2 5 or______________212_____________2x12_Vintage_30_Cond____Cap_4__.wav
+qml: nomRow 5   nomElement 2  name: or______________212_____________2x12_Vintage_30_Cond____Cap_4__.wav
+qml: 2 6 or______________212_Open________2x12_Vintage_30_Cond____Cap_4__.wav
+qml: nomRow 6   nomElement 2  name: or______________212_Open________2x12_Vintage_30_Cond____Cap_4__.wav
+qml: 2 7 vo______________AC15_Green______1x12_Greenback__Cond____Cap_4__.wav
+qml: nomRow 7   nomElement 2  name: vo______________AC15_Green______1x12_Greenback__Cond____Cap_4__.wav
+qml: 2 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_4__.wav
+qml: nomRow 8   nomElement 2  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cap_4__.wav
+qml: 2 9 vo______________AC30_Green______2x12_Greenback__Cond____Cap_4__.wav
+qml: nomRow 9   nomElement 2  name: vo______________AC30_Green______2x12_Greenback__Cond____Cap_4__.wav
+qml: 3 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_0_.wav
+qml: nomRow 0   nomElement 3  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_0_.wav
+qml: 3 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cone_0_.wav
+qml: nomRow 1   nomElement 3  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cone_0_.wav
+qml: 3 2 ma______________1960A___________4x12_G12T-75____Cond____Cone_0_.wav
+qml: nomRow 2   nomElement 3  name: ma______________1960A___________4x12_G12T-75____Cond____Cone_0_.wav
+qml: 3 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cone_0_.wav
+qml: nomRow 3   nomElement 3  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cone_0_.wav
+qml: 3 4 or______________112_____________1x12_Vintage_30_Cond____Cone_0_.wav
+qml: nomRow 4   nomElement 3  name: or______________112_____________1x12_Vintage_30_Cond____Cone_0_.wav
+qml: 3 5 or______________212_____________2x12_Vintage_30_Cond____Cone_0_.wav
+qml: nomRow 5   nomElement 3  name: or______________212_____________2x12_Vintage_30_Cond____Cone_0_.wav
+qml: 3 6 or______________212_Open________2x12_Vintage_30_Cond____Cone_0_.wav
+qml: nomRow 6   nomElement 3  name: or______________212_Open________2x12_Vintage_30_Cond____Cone_0_.wav
+qml: 3 7 vo______________AC15_Green______1x12_Greenback__Cond____Cone_0_.wav
+qml: nomRow 7   nomElement 3  name: vo______________AC15_Green______1x12_Greenback__Cond____Cone_0_.wav
+qml: 3 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_0_.wav
+qml: nomRow 8   nomElement 3  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_0_.wav
+qml: 3 9 vo______________AC30_Green______2x12_Greenback__Cond____Cone_0_.wav
+qml: nomRow 9   nomElement 3  name: vo______________AC30_Green______2x12_Greenback__Cond____Cone_0_.wav
+qml: 4 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_2_.wav
+qml: nomRow 0   nomElement 4  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_2_.wav
+qml: 4 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cone_2_.wav
+qml: nomRow 1   nomElement 4  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cone_2_.wav
+qml: 4 2 ma______________1960A___________4x12_G12T-75____Cond____Cone_2_.wav
+qml: nomRow 2   nomElement 4  name: ma______________1960A___________4x12_G12T-75____Cond____Cone_2_.wav
+qml: 4 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cone_2_.wav
+qml: nomRow 3   nomElement 4  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cone_2_.wav
+qml: 4 4 or______________112_____________1x12_Vintage_30_Cond____Cone_2_.wav
+qml: nomRow 4   nomElement 4  name: or______________112_____________1x12_Vintage_30_Cond____Cone_2_.wav
+qml: 4 5 or______________212_____________2x12_Vintage_30_Cond____Cone_2_.wav
+qml: nomRow 5   nomElement 4  name: or______________212_____________2x12_Vintage_30_Cond____Cone_2_.wav
+qml: 4 6 or______________212_Open________2x12_Vintage_30_Cond____Cone_2_.wav
+qml: nomRow 6   nomElement 4  name: or______________212_Open________2x12_Vintage_30_Cond____Cone_2_.wav
+qml: 4 7 vo______________AC15_Green______1x12_Greenback__Cond____Cone_2_.wav
+qml: nomRow 7   nomElement 4  name: vo______________AC15_Green______1x12_Greenback__Cond____Cone_2_.wav
+qml: 4 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_2_.wav
+qml: nomRow 8   nomElement 4  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_2_.wav
+qml: 4 9 vo______________AC30_Green______2x12_Greenback__Cond____Cone_2_.wav
+qml: nomRow 9   nomElement 4  name: vo______________AC30_Green______2x12_Greenback__Cond____Cone_2_.wav
+qml: 5 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_4_.wav
+qml: nomRow 0   nomElement 5  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Cone_4_.wav
+qml: 5 1 fe______________68_DLX__________1x12_G12V-70____Cond____Cone_4_.wav
+qml: nomRow 1   nomElement 5  name: fe______________68_DLX__________1x12_G12V-70____Cond____Cone_4_.wav
+qml: 5 2 ma______________1960A___________4x12_G12T-75____Cond____Cone_4_.wav
+qml: nomRow 2   nomElement 5  name: ma______________1960A___________4x12_G12T-75____Cond____Cone_4_.wav
+qml: 5 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cone_4_.wav
+qml: nomRow 3   nomElement 5  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cone_4_.wav
+qml: 5 4 or______________112_____________1x12_Vintage_30_Cond____Cone_4_.wav
+qml: nomRow 4   nomElement 5  name: or______________112_____________1x12_Vintage_30_Cond____Cone_4_.wav
+qml: 5 5 or______________212_____________2x12_Vintage_30_Cond____Cone_4_.wav
+qml: nomRow 5   nomElement 5  name: or______________212_____________2x12_Vintage_30_Cond____Cone_4_.wav
+qml: 5 6 or______________212_Open________2x12_Vintage_30_Cond____Cone_4_.wav
+qml: nomRow 6   nomElement 5  name: or______________212_Open________2x12_Vintage_30_Cond____Cone_4_.wav
+qml: 5 7 vo______________AC15_Green______1x12_Greenback__Cond____Cone_4_.wav
+qml: nomRow 7   nomElement 5  name: vo______________AC15_Green______1x12_Greenback__Cond____Cone_4_.wav
+qml: 5 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_4_.wav
+qml: nomRow 8   nomElement 5  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Cone_4_.wav
+qml: 5 9 vo______________AC30_Green______2x12_Greenback__Cond____Cone_4_.wav
+qml: nomRow 9   nomElement 5  name: vo______________AC30_Green______2x12_Greenback__Cond____Cone_4_.wav
+qml: 6 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_0_.wav
+qml: nomRow 0   nomElement 6  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_0_.wav
+qml: 6 1 fe______________68_DLX__________1x12_G12V-70____Cond____Edge_0_.wav
+qml: nomRow 1   nomElement 6  name: fe______________68_DLX__________1x12_G12V-70____Cond____Edge_0_.wav
+qml: 6 2 ma______________1960A___________4x12_G12T-75____Cond____Edge_0_.wav
+qml: nomRow 2   nomElement 6  name: ma______________1960A___________4x12_G12T-75____Cond____Edge_0_.wav
+qml: 6 3 ma______________1960AV__________4x12_Vintage_30_Cond____Edge_0_.wav
+qml: nomRow 3   nomElement 6  name: ma______________1960AV__________4x12_Vintage_30_Cond____Edge_0_.wav
+qml: 6 4 or______________112_____________1x12_Vintage_30_Cond____Edge_0_.wav
+qml: nomRow 4   nomElement 6  name: or______________112_____________1x12_Vintage_30_Cond____Edge_0_.wav
+qml: 6 5 or______________212_____________2x12_Vintage_30_Cond____Edge_0_.wav
+qml: nomRow 5   nomElement 6  name: or______________212_____________2x12_Vintage_30_Cond____Edge_0_.wav
+qml: 6 6 or______________212_Open________2x12_Vintage_30_Cond____Edge_0_.wav
+qml: nomRow 6   nomElement 6  name: or______________212_Open________2x12_Vintage_30_Cond____Edge_0_.wav
+qml: 6 7 vo______________AC15_Green______1x12_Greenback__Cond____Edge_0_.wav
+qml: nomRow 7   nomElement 6  name: vo______________AC15_Green______1x12_Greenback__Cond____Edge_0_.wav
+qml: 6 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_0_.wav
+qml: nomRow 8   nomElement 6  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_0_.wav
+qml: 6 9 vo______________AC30_Green______2x12_Greenback__Cond____Edge_0_.wav
+qml: nomRow 9   nomElement 6  name: vo______________AC30_Green______2x12_Greenback__Cond____Edge_0_.wav
+qml: 7 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_2_.wav
+qml: nomRow 0   nomElement 7  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_2_.wav
+qml: 7 1 fe______________68_DLX__________1x12_G12V-70____Cond____Edge_2_.wav
+qml: nomRow 1   nomElement 7  name: fe______________68_DLX__________1x12_G12V-70____Cond____Edge_2_.wav
+qml: 7 2 ma______________1960A___________4x12_G12T-75____Cond____Edge_2_.wav
+qml: nomRow 2   nomElement 7  name: ma______________1960A___________4x12_G12T-75____Cond____Edge_2_.wav
+qml: 7 3 ma______________1960AV__________4x12_Vintage_30_Cond____Edge_2_.wav
+qml: nomRow 3   nomElement 7  name: ma______________1960AV__________4x12_Vintage_30_Cond____Edge_2_.wav
+qml: 7 4 or______________112_____________1x12_Vintage_30_Cond____Edge_2_.wav
+qml: nomRow 4   nomElement 7  name: or______________112_____________1x12_Vintage_30_Cond____Edge_2_.wav
+qml: 7 5 or______________212_____________2x12_Vintage_30_Cond____Edge_2_.wav
+qml: nomRow 5   nomElement 7  name: or______________212_____________2x12_Vintage_30_Cond____Edge_2_.wav
+qml: 7 6 or______________212_Open________2x12_Vintage_30_Cond____Edge_2_.wav
+qml: nomRow 6   nomElement 7  name: or______________212_Open________2x12_Vintage_30_Cond____Edge_2_.wav
+qml: 7 7 vo______________AC15_Green______1x12_Greenback__Cond____Edge_2_.wav
+qml: nomRow 7   nomElement 7  name: vo______________AC15_Green______1x12_Greenback__Cond____Edge_2_.wav
+qml: 7 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_2_.wav
+qml: nomRow 8   nomElement 7  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_2_.wav
+qml: 7 9 vo______________AC30_Green______2x12_Greenback__Cond____Edge_2_.wav
+qml: nomRow 9   nomElement 7  name: vo______________AC30_Green______2x12_Greenback__Cond____Edge_2_.wav
+qml: 8 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_4_.wav
+qml: nomRow 0   nomElement 8  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_4_.wav
+qml: 8 1 fe______________68_DLX__________1x12_G12V-70____Cond____Edge_4_.wav
+qml: nomRow 1   nomElement 8  name: fe______________68_DLX__________1x12_G12V-70____Cond____Edge_4_.wav
+qml: 8 2 ma______________1960A___________4x12_G12T-75____Cond____Edge_4_.wav
+qml: nomRow 2   nomElement 8  name: ma______________1960A___________4x12_G12T-75____Cond____Edge_4_.wav
+qml: 8 3 ma______________1960AV__________4x12_Vintage_30_Cond____Edge_4_.wav
+qml: nomRow 3   nomElement 8  name: ma______________1960AV__________4x12_Vintage_30_Cond____Edge_4_.wav
+qml: 8 4 or______________112_____________1x12_Vintage_30_Cond____Edge_4_.wav
+qml: nomRow 4   nomElement 8  name: or______________112_____________1x12_Vintage_30_Cond____Edge_4_.wav
+qml: 8 5 or______________212_____________2x12_Vintage_30_Cond____Edge_4_.wav
+qml: nomRow 5   nomElement 8  name: or______________212_____________2x12_Vintage_30_Cond____Edge_4_.wav
+qml: 8 6 or______________212_Open________2x12_Vintage_30_Cond____Edge_4_.wav
+qml: nomRow 6   nomElement 8  name: or______________212_Open________2x12_Vintage_30_Cond____Edge_4_.wav
+qml: 8 7 vo______________AC15_Green______1x12_Greenback__Cond____Edge_4_.wav
+qml: nomRow 7   nomElement 8  name: vo______________AC15_Green______1x12_Greenback__Cond____Edge_4_.wav
+qml: 8 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_4_.wav
+qml: nomRow 8   nomElement 8  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_4_.wav
+qml: 8 9 vo______________AC30_Green______2x12_Greenback__Cond____Edge_4_.wav
+qml: nomRow 9   nomElement 8  name: vo______________AC30_Green______2x12_Greenback__Cond____Edge_4_.wav
+qml: 9 0 fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_45_.wav
+qml: nomRow 0   nomElement 9  name: fe______________65_TWN__________2x12_Jensen_C12KCond____Edge_45_.wav
+qml: 9 1 fe______________68_DLX__________1x12_G12V-70____Cond____Edge_45_.wav
+qml: nomRow 1   nomElement 9  name: fe______________68_DLX__________1x12_G12V-70____Cond____Edge_45_.wav
+qml: 9 2 ma______________1960A___________4x12_G12T-75____Cond____Edge_45_.wav
+qml: nomRow 2   nomElement 9  name: ma______________1960A___________4x12_G12T-75____Cond____Edge_45_.wav
+qml: 9 3 ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav
+qml: nomRow 3   nomElement 9  name: ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav
+qml: 9 4 or______________112_____________1x12_Vintage_30_Cond____Edge_45_.wav
+qml: nomRow 4   nomElement 9  name: or______________112_____________1x12_Vintage_30_Cond____Edge_45_.wav
+qml: 9 5 or______________212_____________2x12_Vintage_30_Cond____Edge_45_.wav
+qml: nomRow 5   nomElement 9  name: or______________212_____________2x12_Vintage_30_Cond____Edge_45_.wav
+qml: 9 6 or______________212_Open________2x12_Vintage_30_Cond____Edge_45_.wav
+qml: nomRow 6   nomElement 9  name: or______________212_Open________2x12_Vintage_30_Cond____Edge_45_.wav
+qml: 9 7 vo______________AC15_Green______1x12_Greenback__Cond____Edge_45_.wav
+qml: nomRow 7   nomElement 9  name: vo______________AC15_Green______1x12_Greenback__Cond____Edge_45_.wav
+qml: 9 8 vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_45_.wav
+qml: nomRow 8   nomElement 9  name: vo______________AC30_Blue_______2x12_Alnico_BlueCond____Edge_45_.wav
+qml: 9 9 vo______________AC30_Green______2x12_Greenback__Cond____Edge_45_.wav
+qml: nomRow 9   nomElement 9  name: vo______________AC30_Green______2x12_Greenback__Cond____Edge_45_.wav
+qml: kolvo 101
+getRns100
+sendCount 0
+send "rn\r\n"
+slReadyRead "rn\r"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav\n"
+qml: impulse_name 0 0 ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav
+qml: nomRow 0   nomElement 0  name: ma______________1960AV__________4x12_Vintage_30_Cond____Edge_45_.wav
+getRn
+sendCount 0
+send "gb\r\n"
+slReadyRead "gb\r0309\n"
+getBank
+sendCount 0
+send "gs\r\n"
+slReadyRead "gs\r0f0f0f0f0f0f011f01000001161106000d000000000000000f0f000000000"
+slReadyRead "0000000000000000000010e00\n"
+READ GS
+getStatus
+sendCount 0
+send "gm\r\n"
+slReadyRead "gm\r01\n"
+getMode
+
+
+
+
+
+
+
+// Изменение пресета
+
+
+setValue "preset_change" 30
+sendCount 0
+send "pc 1e\r\n"
+setValue 1674
+slReadyRead "pc 1e\r"
+getPC
+sendCount 0
+send "gb\r\n"
+slReadyRead "END\ngb\r0300\n"
+getBank
+sendCount 0
+send "gs\r\n"
+slReadyRead "gs\r0f0f0f0f0f0f011f01000001161106000d000000000000000f0f000000000"
+slReadyRead "0000000000000000000010e00\n"
+READ GS
+getStatus
+sendCount 0
+send "rn\r\n"
+slReadyRead "rn\r"
+slReadyRead "ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__."
+slReadyRead "wav\n"
+qml: impulse_name 0 3 ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__.wav
+qml: nomRow 3   nomElement 0  name: ma______________1960AV__________4x12_Vintage_30_Cond____Cap_0__.wav
+getRn
+
+
+
+
+

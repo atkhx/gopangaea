@@ -9,31 +9,23 @@ const (
 	deviceCommand = "eqq"
 )
 
-func Validate(index, value int) error {
-	if index < 1 || index > 5 {
-		return errors.New("index overflow: allowed range [1..5]")
-	}
-	if value < 1 || value > 200 {
-		return errors.New("value overflow: allowed range [1..200]")
-	}
-	return nil
-}
-
-func NewWithArgs(index, value int) (Command, error) {
-	if err := Validate(index, value); err != nil {
-		return Command{}, err
-	}
-
-	return Command{value: value, index: index}, nil
-}
-
-func New() *Command {
-	return &Command{}
+func New(index, value int) Command {
+	return Command{value: value, index: index}
 }
 
 type Command struct {
 	index int
 	value int
+}
+
+func (c Command) Validate() error {
+	if c.index < 1 || c.index > 5 {
+		return errors.New("index overflow: allowed range [1..5]")
+	}
+	if c.value < 1 || c.value > 200 {
+		return errors.New("value overflow: allowed range [1..200]")
+	}
+	return nil
 }
 
 func (c Command) GetCommand() string {

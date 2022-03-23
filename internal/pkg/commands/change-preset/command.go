@@ -9,19 +9,11 @@ const (
 	deviceCommand = "pc"
 )
 
-func NewWithArgs(bank, preset int) (Command, error) {
-	if err := Validate(bank, preset); err != nil {
-		return Command{}, err
-	}
-
+func New(bank, preset int) Command {
 	return Command{
 		bank:   bank,
 		preset: preset,
-	}, nil
-}
-
-func New() *Command {
-	return &Command{}
+	}
 }
 
 type Command struct {
@@ -33,12 +25,12 @@ func (c Command) GetCommand() string {
 	return fmt.Sprintf("%s %x", deviceCommand, 10*c.bank+c.preset)
 }
 
-func Validate(bank, preset int) error {
-	if bank < 0 || bank > 9 {
+func (c Command) Validate() error {
+	if c.bank < 0 || c.bank > 9 {
 		return errors.New("bank overflow")
 	}
 
-	if preset < 0 || preset > 9 {
+	if c.preset < 0 || c.preset > 9 {
 		return errors.New("preset overflow")
 	}
 	return nil

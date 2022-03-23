@@ -9,29 +9,20 @@ const (
 	deviceCommand = "prh"
 )
 
-func Validate(value int) error {
-	if value < 0 || value > 127 {
-		return errors.New("value overflow: allowed range [0..127]")
-	}
-	return nil
-}
-
-func NewWithArgs(value int) (Command, error) {
-	if err := Validate(value); err != nil {
-		return Command{}, err
-	}
-
-	return Command{value: value}, nil
-}
-
-func New() *Command {
-	return &Command{}
+func New(value int) Command {
+	return Command{value: value}
 }
 
 type Command struct {
 	value int
 }
 
+func (c Command) Validate() error {
+	if c.value < 0 || c.value > 127 {
+		return errors.New("value overflow: allowed range [0..127]")
+	}
+	return nil
+}
 func (c Command) GetCommand() string {
 	v := 192 + c.value
 	if v > 256 {

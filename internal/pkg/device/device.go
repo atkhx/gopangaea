@@ -61,12 +61,21 @@ type CommandSetter interface {
 	GetCommand() string
 }
 
+type CommandWithValidation interface {
+	Validate() error
+}
+
 type Connection interface {
 	IsConnected() bool
 	Connect() error
 	Disconnect() error
 	WriteCommand(command string) error
 	ReadResponse(command string, length int) ([]byte, error)
+}
+
+type Response interface {
+	GetLength() int
+	Parse([]byte) error
 }
 
 type device struct {
@@ -82,15 +91,21 @@ func (d *device) IsConnected() bool {
 }
 
 func (d *device) ExecCommand(command Command) ([]byte, error) {
+	if v, ok := command.(CommandWithValidation); ok {
+		if err := v.Validate(); err != nil {
+			return nil, err
+		}
+	}
+
 	return d.execCommand(command.GetCommand(), command.GetResponseLength())
 }
 
-type Response interface {
-	GetLength() int
-	Parse([]byte) error
-}
-
 func (d *device) ExecCommandSetter(command CommandSetter, response Response) error {
+	if v, ok := command.(CommandWithValidation); ok {
+		if err := v.Validate(); err != nil {
+			return err
+		}
+	}
 	b, err := d.execCommand(command.GetCommand(), response.GetLength())
 	if err != nil {
 		return err
@@ -202,10 +217,8 @@ func (d *device) GetImpulse() (get_impulse.Response, error) {
 }
 
 func (d *device) SetImpulse(name string, impulse []byte) (bool, error) {
-	cmd := set_impulse.Command{Name: name, Impulse: impulse}
 	r := deviceio.NewResponseBoolWithCustomEnd(set_impulse.ResponseSuffix)
-
-	if err := d.ExecCommandSetter(cmd, r); err != nil {
+	if err := d.ExecCommandSetter(set_impulse.New(name, impulse, false), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -259,39 +272,24 @@ func (d *device) GetImpulseNames() (get_impulse_names.Response, error) {
 }
 
 func (d *device) ChangePreset(bank, preset int) (bool, error) {
-	command, err := change_preset.NewWithArgs(bank, preset)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(change_preset.New(bank, preset), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetMode(value int) (bool, error) {
-	command, err := set_mode.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithoutEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_mode.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetMasterVolume(value int) (bool, error) {
-	command, err := set_master_volume.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_master_volume.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -306,26 +304,16 @@ func (d *device) SetReverbState(value bool) (bool, error) {
 }
 
 func (d *device) SetReverbType(value int) (bool, error) {
-	command, err := set_reverb_type.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_reverb_type.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetReverbVolume(value int) (bool, error) {
-	command, err := set_reverb_volume.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_reverb_volume.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -340,13 +328,8 @@ func (d *device) SetPresenceState(value bool) (bool, error) {
 }
 
 func (d *device) SetPresenceVolume(value int) (bool, error) {
-	command, err := set_presence_value.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_presence_value.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -361,13 +344,8 @@ func (d *device) SetLPFilterState(value bool) (bool, error) {
 }
 
 func (d *device) SetLPFilterValue(value int) (bool, error) {
-	command, err := set_lp_filter_value.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_lp_filter_value.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -382,13 +360,8 @@ func (d *device) SetHPFilterState(value bool) (bool, error) {
 }
 
 func (d *device) SetHPFilterValue(value int) (bool, error) {
-	command, err := set_hp_filter_value.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_hp_filter_value.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -411,52 +384,32 @@ func (d *device) SetPreampState(value bool) (bool, error) {
 }
 
 func (d *device) SetPreampVolume(volume int) (bool, error) {
-	command, err := set_preamp_volume.NewWithArgs(volume)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_preamp_volume.New(volume), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetPreampHigh(high int) (bool, error) {
-	command, err := set_preamp_high.NewWithArgs(high)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_preamp_high.New(high), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetPreampMid(mid int) (bool, error) {
-	command, err := set_preamp_mid.NewWithArgs(mid)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_preamp_mid.New(mid), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetPreampLow(low int) (bool, error) {
-	command, err := set_preamp_low.NewWithArgs(low)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_preamp_low.New(low), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -471,39 +424,24 @@ func (d *device) SetPowerAmpState(value bool) (bool, error) {
 }
 
 func (d *device) SetPowerAmpType(value int) (bool, error) {
-	command, err := set_poweramp_type.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_poweramp_type.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetPowerAmpVolume(volume int) (bool, error) {
-	command, err := set_poweramp_volume.NewWithArgs(volume)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_poweramp_volume.New(volume), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetPowerAmpSlave(slave int) (bool, error) {
-	command, err := set_poweramp_slave.NewWithArgs(slave)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_poweramp_slave.New(slave), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -518,26 +456,16 @@ func (d *device) SetCompressorState(value bool) (bool, error) {
 }
 
 func (d *device) SetCompressorSustain(value int) (bool, error) {
-	command, err := set_compressor_sustain.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_compressor_sustain.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetCompressorVolume(value int) (bool, error) {
-	command, err := set_compressor_volume.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_compressor_volume.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -552,26 +480,16 @@ func (d *device) SetNoiseGateState(value bool) (bool, error) {
 }
 
 func (d *device) SetNoiseGateThresh(value int) (bool, error) {
-	command, err := set_noisegate_thresh.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_noisegate_thresh.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetNoiseGateDecay(value int) (bool, error) {
-	command, err := set_noisegate_decay.NewWithArgs(value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithZeros()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_noisegate_decay.New(value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
@@ -594,39 +512,24 @@ func (d *device) SetEqualizerPosition(value bool) (bool, error) {
 }
 
 func (d *device) SetEqualizerQuantityFactor(idx, value int) (bool, error) {
-	command, err := set_equalizer_quantity_factor.NewWithArgs(idx, value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithoutEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_equalizer_quantity_factor.New(idx, value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetEqualizerFrequencies(idx, value int) (bool, error) {
-	command, err := set_equalizer_frequencies.NewWithArgs(idx, value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithoutEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_equalizer_frequencies.New(idx, value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil
 }
 
 func (d *device) SetEqualizerMixer(idx, value int) (bool, error) {
-	command, err := set_equalizer_mixer.NewWithArgs(idx, value)
-	if err != nil {
-		return false, err
-	}
-
 	r := deviceio.NewResponseBoolWithoutEnd()
-	if err := d.ExecCommandSetter(command, r); err != nil {
+	if err := d.ExecCommandSetter(set_equalizer_mixer.New(idx, value), r); err != nil {
 		return false, err
 	}
 	return r.Success(), nil

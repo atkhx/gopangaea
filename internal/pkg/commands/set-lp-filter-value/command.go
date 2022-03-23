@@ -10,27 +10,19 @@ const (
 	deviceCommand = "lv"
 )
 
-func Validate(value int) error {
-	if value < 1000 || value > 20000 {
-		return errors.New("value overflow: allowed range [1k..20k]")
-	}
-	return nil
-}
-
-func NewWithArgs(value int) (Command, error) {
-	if err := Validate(value); err != nil {
-		return Command{}, err
-	}
-
-	return Command{value: value}, nil
-}
-
-func New() *Command {
-	return &Command{}
+func New(value int) Command {
+	return Command{value: value}
 }
 
 type Command struct {
 	value int
+}
+
+func (c Command) Validate() error {
+	if c.value < 1000 || c.value > 20000 {
+		return errors.New("value overflow: allowed range [1k..20k]")
+	}
+	return nil
 }
 
 func (c Command) GetCommand() string {
