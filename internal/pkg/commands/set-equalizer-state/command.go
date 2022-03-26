@@ -8,12 +8,8 @@ const (
 	deviceCommand = "eqo"
 )
 
-func NewWithArgs(value bool) Command {
+func New(value bool) Command {
 	return Command{value: value}
-}
-
-func New() *Command {
-	return &Command{}
 }
 
 type Command struct {

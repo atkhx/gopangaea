@@ -14,34 +14,19 @@ func NewResponseReader(reader io.Reader) *responseReader {
 	return &responseReader{reader: reader}
 }
 
-func (d *responseReader) Read() ([]byte, error) {
-	var result []byte
-
-	for {
-		readBuffer := make([]byte, 64)
-		n, errRead := d.reader.Read(readBuffer)
-		if errRead != nil {
-			break
-		}
-
-		if n == 0 {
-			break
-		}
-
-		result = append(result, readBuffer[:n]...)
-	}
-	return result, nil
-}
-
-func (d *responseReader) ReadWithSkipTails(command string, length int) ([]byte, error) {
-	var checkTails = true
-	var result []byte
-
+func (d *responseReader) GetPrefix(command string) []byte {
 	if idx := strings.Index(command, "\r"); idx > -1 {
 		command = string([]byte(command)[:idx])
 	}
 
-	separator := append([]byte(command), byte(0x0d))
+	return append([]byte(command), byte(0x0d))
+}
+
+func (d *responseReader) Read(command string, length int) ([]byte, error) {
+	var checkTails = true
+	var result []byte
+
+	separator := d.GetPrefix(command)
 
 	skippedBytes := 0
 	skippedBytesBuffer := []byte{}

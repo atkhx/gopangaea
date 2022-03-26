@@ -1,51 +1,57 @@
 package deviceio
 
+import (
+	"encoding/hex"
+
+	"github.com/pkg/errors"
+)
+
 // "END."
 var responseWithEND = []byte{0x45, 0x4e, 0x44, 0x0a}
 
 // "00."
 var responseWith00 = []byte{0x30, 0x30, 0x0a}
 
-func NewResponseBoolWithCustomEnd(suffix []byte) *ResponseBool {
-	return &ResponseBool{
-		expected:  suffix,
-		maxLength: len(suffix),
-	}
-}
-func NewResponseBoolWithoutEnd() *ResponseBool {
-	return &ResponseBool{
-		expected:  []byte{},
-		maxLength: 0,
-	}
-}
+// "01."
+var responseWith01 = []byte{0x30, 0x31, 0x0a}
 
-func NewResponseBoolWithEnd() *ResponseBool {
+func NewResponse(suffix ...[]byte) *ResponseBool {
 	return &ResponseBool{
-		expected:  responseWithEND,
-		maxLength: len(responseWithEND),
-	}
-}
-
-func NewResponseBoolWithZeros() *ResponseBool {
-	return &ResponseBool{
-		expected:  responseWith00,
-		maxLength: len(responseWith00),
+		possible: append([][]byte{
+			responseWithEND,
+			responseWith00,
+			responseWith01,
+		}, suffix...),
 	}
 }
 
 type ResponseBool struct {
-	maxLength int
-	expected  []byte
-	success   bool
+	success  bool
+	possible [][]byte
 }
 
-func (r *ResponseBool) GetLength() int {
-	return r.maxLength
+func (r *ResponseBool) GetLength() (result int) {
+	for _, suffix := range r.possible {
+		if l := len(suffix); result == 0 || l < result {
+			result = l
+		}
+	}
+	return
 }
 
 func (r *ResponseBool) Parse(actual []byte) error {
-	r.success = string(actual) == string(r.expected)
-	return nil
+	if len(actual) == 0 {
+		r.success = true
+		return nil
+	}
+
+	for _, suffix := range r.possible {
+		if r.success = string(actual) == string(suffix); r.success {
+			return nil
+		}
+	}
+
+	return errors.Errorf("invalid response: %s", hex.Dump(actual))
 }
 
 func (r ResponseBool) Success() bool {

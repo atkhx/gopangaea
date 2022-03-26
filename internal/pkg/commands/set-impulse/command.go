@@ -3,8 +3,6 @@ package set_impulse
 import (
 	"errors"
 	"fmt"
-	"log"
-	"strconv"
 )
 
 const (
@@ -13,14 +11,15 @@ const (
 
 var ResponseSuffix = []byte{0x63, 0x63, 0x45, 0x4e, 0x44, 0x0a, 0x0d} //ccEND..
 
-func New(name string, impulse []byte, persist bool) *Command {
-	return &Command{name: name, Impulse: impulse, persist: persist}
+func New(name string, persist bool, impulse Impulse) *Command {
+	return &Command{name: name, impulse: impulse, persist: persist}
 }
 
 type Command struct {
 	name    string
-	Impulse []byte
 	persist bool
+
+	impulse Impulse
 }
 
 func (c Command) Validate() error {
@@ -29,33 +28,23 @@ func (c Command) Validate() error {
 		return errors.New("invalid name")
 	}
 
-	if len(c.Impulse) == 0 || len(c.Impulse) > 6298 {
-		return errors.New("invalid impulse")
-	}
-
-	return nil
-}
-
-func (c Command) prepareImpulseData() []byte {
-	result := make([]byte, len(c.Impulse)/2)
-
-	for i := 0; i < len(c.Impulse); i += 2 {
-		r, err := strconv.ParseUint(string(c.Impulse[i:i+2]), 16, 16)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		result[i/2] = byte(r)
-	}
-
-	return result
+	return c.impulse.IsValid()
 }
 
 func (c Command) GetCommand() string {
 	// 0 - перезатирает пресет
+	// - передаем имя
+	// - передем заголови
 	// 1 - временное хранение
-	persist := 1
+	// - s вместо имени
+	// - отрезаем заголовки
 	if c.persist {
-		persist = 0
+		return fmt.Sprintf("%s %s %d\r%x\r", deviceCommand, c.name, 0, c.impulse.Source())
+	} else {
+		trimmed, err := c.impulse.Trimmed()
+		if err != nil {
+			panic("run without validation")
+		}
+		return fmt.Sprintf("%s %s %d\r%x\r", deviceCommand, "s", 1, trimmed)
 	}
-	return fmt.Sprintf("%s %s %d\r%x\r", deviceCommand, c.name, persist, c.prepareImpulseData())
 }

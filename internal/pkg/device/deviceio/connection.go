@@ -1,6 +1,8 @@
 package deviceio
 
 import (
+	"sync"
+
 	"github.com/jpoirier/gousb/usb"
 	"github.com/pkg/errors"
 )
@@ -10,6 +12,8 @@ func New(usbContext *usb.Context) *connection {
 }
 
 type connection struct {
+	sync.Mutex
+
 	usbContext *usb.Context
 
 	connected bool
@@ -31,18 +35,19 @@ func (c *connection) Device() *usb.Device {
 	return c.device
 }
 
-func (c *connection) WriteCommand(command string) error {
-	if !c.connected {
-		return errors.New("device not connected")
-	}
-	return c.commandWriter.Write(command)
-}
+func (c *connection) Exec(command string, responseLength int) ([]byte, error) {
+	c.Lock()
+	defer c.Unlock()
 
-func (c *connection) ReadResponse(command string, length int) ([]byte, error) {
 	if !c.connected {
 		return nil, errors.New("device not connected")
 	}
-	return c.responseReader.ReadWithSkipTails(command, length)
+
+	if err := c.commandWriter.Write(command); err != nil {
+		return nil, err
+	}
+
+	return c.responseReader.Read(command, responseLength)
 }
 
 func (c *connection) Connect() (err error) {
