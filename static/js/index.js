@@ -15,6 +15,26 @@ $('document').ready(function () {
         sendChange(this.id, this.value);
     })
 
+    $('#changeMode button').click(function () {
+        $('#debug').html('changeMode click ' + this.id + ':' + this.value);
+        sendChange(this.id, this.value);
+        $('#modeBtnGroup').text($(this).text())
+    })
+
+    $('#changePreset button').click(function () {
+        $('#debug').html('changePreset click ' + this.id + ':' + this.value);
+        sendChange(this.id, this.value);
+        $('#presetBtnGroup').text($(this).text())
+        document.location.href = '/';
+    })
+
+    $('#changeBank button').click(function () {
+        $('#debug').html('changeBank click ' + this.id + ':' + this.value);
+        sendChange(this.id, this.value);
+        $('#bankBtnGroup').text($(this).text())
+        document.location.href = '/';
+    })
+
     $('#controlForm input[type=range]').each(function (input) {
         $('#debug').html('' + this.id + ':' + this.value);
         let label=$('label[for='+this.id+']');

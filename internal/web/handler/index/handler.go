@@ -7,11 +7,12 @@ import (
 
 	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
 	get_device "github.com/atkhx/gopangaea/internal/pkg/commands/get-device"
+	get_impulse_name "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-name"
 	get_impulse_names "github.com/atkhx/gopangaea/internal/pkg/commands/get-impulse-names"
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
-	"github.com/atkhx/gopangaea/internal/web/form"
+	"github.com/atkhx/gopangaea/internal/pkg/library/settings"
 	"github.com/pkg/errors"
 )
 
@@ -23,6 +24,7 @@ type Device interface {
 	GetVersion() (get_version.Response, error)
 	GetBank() (get_bank.Response, error)
 	GetImpulseNames() (get_impulse_names.Response, error)
+	GetImpulseName() (get_impulse_name.Response, error)
 }
 
 type Renderer interface {
@@ -60,32 +62,43 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Println("error on get bank:", err)
 	}
 
+	impulseName, err := h.device.GetImpulseName()
+	if err != nil {
+		log.Println("error on get impulse name:", err)
+	}
+
 	connected := h.device.IsConnected()
 
 	viewData := map[string]interface{}{
-		"Connected":      connected,
-		"Mode":           mode.Mode,
-		"Device":         device.String(),
-		"Bank":           bank.Bank,
-		"Preset":         bank.Preset,
-		"Version":        version.String(),
-		"Settings":       form.Form{},
-		"DeviceImpulses": form.DeviceImpulses{},
+		"Connected":       connected,
+		"Mode":            mode.Mode,
+		"ModeName":        mode.String(),
+		"Device":          device.String(),
+		"Bank":            bank.Bank,
+		"Preset":          bank.Preset,
+		"PresetSelection": GetPresetSelection(bank.Bank, bank.Preset),
+		"ImpulseName":     impulseName.String(),
+		"Version":         version.String(),
+		"AmpTypes":        AmpTypes{},
+		"Settings":        settings.Settings{},
+		"DeviceImpulses":  DeviceImpulses{},
 	}
 
 	if connected {
-		settings, err := h.device.GetSettings()
+		dto, err := h.device.GetSettings()
 		if err != nil {
 			log.Println("error on get settings:", err)
 		} else {
-			viewData["Settings"] = form.FromDto(settings.Settings())
+			settingsObj := dto.Settings()
+			viewData["Settings"] = settingsObj
+			viewData["AmpTypes"] = GetAmpTypes(version.String(), settingsObj.PowerAmp.Index)
 		}
 
 		impulses, err := h.device.GetImpulseNames()
 		if err != nil {
 			log.Println("error on get impulses:", err)
 		} else {
-			viewData["DeviceImpulses"] = form.DeviceImpulsesFromDto(impulses)
+			viewData["DeviceImpulses"] = DeviceImpulsesFromDto(impulses)
 		}
 	}
 

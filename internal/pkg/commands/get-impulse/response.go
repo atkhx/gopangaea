@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"regexp"
 
-	"github.com/atkhx/gopangaea/internal/pkg/impulse"
+	"github.com/atkhx/gopangaea/internal/pkg/library/impulse"
 	"github.com/pkg/errors"
 )
 

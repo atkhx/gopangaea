@@ -11,6 +11,7 @@ import (
 
 	"github.com/atkhx/gopangaea/internal/pkg/device"
 	"github.com/atkhx/gopangaea/internal/pkg/device/deviceio"
+	"github.com/atkhx/gopangaea/internal/pkg/library"
 	"github.com/atkhx/gopangaea/internal/web/handler/change"
 	"github.com/atkhx/gopangaea/internal/web/handler/index"
 	reset_preset "github.com/atkhx/gopangaea/internal/web/handler/reset-preset"
@@ -38,6 +39,8 @@ func main() {
 	conn := deviceio.New(usbContext)
 	defer conn.Disconnect()
 
+	conn.Connect()
+
 	pangaea := device.New(conn)
 
 	tpls, err := templates.New(root, templatePaths...)
@@ -45,8 +48,14 @@ func main() {
 		log.Fatalln(errors.Wrap(err, "can't create templates"))
 	}
 
+	lib := library.New()
+
+	//if err := lib.LoadFromDevice(pangaea); err != nil {
+	//	log.Println("load from device failed", err)
+	//}
+
 	http.Handle("/", index.New(pangaea, tpls))
-	http.Handle("/change", change.New(pangaea, tpls))
+	http.Handle("/change", change.New(pangaea, lib, tpls))
 	http.Handle("/save-preset", save_preset.New(pangaea))
 	http.Handle("/reset-preset", reset_preset.New(pangaea))
 	http.Handle("/static/", http.FileServer(http.Dir(root)))

@@ -1,13 +1,14 @@
-package get_settings
+package settings
 
 type Settings struct {
-	NoiseGate    NoiseGate
-	Compressor   Compressor
-	PreAmp       PreAmp
-	EarlyReverb  EarlyReverb
-	PowerAmp     PowerApm
-	Presence     Presence
-	Impulse      Impulse
+	NoiseGate   NoiseGate
+	Compressor  Compressor
+	PreAmp      PreAmp
+	EarlyReverb EarlyReverb
+	PowerAmp    PowerApm
+	Presence    Presence
+
+	ImpulseState bool
 	MasterVolume int
 
 	Equalizer      Equalizer
@@ -27,10 +28,6 @@ type EarlyReverb struct {
 	Active bool
 	Volume int
 	Type   int
-}
-
-type Impulse struct {
-	Active bool
 }
 
 type PowerApm struct {

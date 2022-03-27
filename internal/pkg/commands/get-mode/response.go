@@ -34,12 +34,12 @@ func ParseResponse(data []byte) (Response, error) {
 func (r Response) String() string {
 	switch r.Mode {
 	case 1:
-		return "phones"
+		return "Phones"
 	case 2:
-		return "line"
+		return "Line"
 	case 3:
-		return "balance"
+		return "Balance"
 	default:
-		return "unknown"
+		return "Unknown"
 	}
 }

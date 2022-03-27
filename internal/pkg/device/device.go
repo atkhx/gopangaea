@@ -49,7 +49,7 @@ import (
 	set_reverb_volume "github.com/atkhx/gopangaea/internal/pkg/commands/set-reverb-volume"
 	set_settings "github.com/atkhx/gopangaea/internal/pkg/commands/set-settings"
 	"github.com/atkhx/gopangaea/internal/pkg/device/deviceio"
-	"github.com/atkhx/gopangaea/internal/pkg/impulse"
+	"github.com/atkhx/gopangaea/internal/pkg/library/impulse"
 	"github.com/pkg/errors"
 )
 

@@ -9,6 +9,9 @@ import (
 	"regexp"
 	"strconv"
 
+	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
+	"github.com/atkhx/gopangaea/internal/pkg/library"
+	"github.com/atkhx/gopangaea/internal/pkg/library/impulse"
 	"github.com/pkg/errors"
 )
 
@@ -55,6 +58,15 @@ type Device interface {
 	SetEqualizerQuantityFactor(idx, value int) (bool, error)
 	SetEqualizerMixer(idx, value int) (bool, error)
 	SetEqualizerFrequencies(idx, value int) (bool, error)
+
+	SetImpulse(name string, persist bool, impulse *impulse.Impulse) (bool, error)
+
+	GetBank() (get_bank.Response, error)
+	ChangePreset(bank, preset int) (bool, error)
+}
+
+type Library interface {
+	GetPreset(index int) (library.Preset, error)
 }
 
 type Renderer interface {
@@ -63,11 +75,12 @@ type Renderer interface {
 
 type handler struct {
 	device   Device
+	library  Library
 	renderer Renderer
 }
 
-func New(device Device, renderer Renderer) *handler {
-	return &handler{device: device, renderer: renderer}
+func New(device Device, library Library, renderer Renderer) *handler {
+	return &handler{device: device, library: library, renderer: renderer}
 }
 
 func (h *handler) writeError(w http.ResponseWriter, err error) {
@@ -212,8 +225,26 @@ func (h *handler) changeParams(params []Param) (interface{}, error) {
 			return h.device.SetMode(mustBeInt(param.Value))
 		case "masterVolume":
 			return h.device.SetMasterVolume(mustBeInt(param.Value))
+		case "bank":
+			b, err := h.device.GetBank()
+			if err != nil {
+				return nil, err
+			}
+
+			return h.device.ChangePreset(mustBeInt(param.Value), b.Preset)
+		case "preset":
+			b, err := h.device.GetBank()
+			if err != nil {
+				return nil, err
+			}
+
+			return h.device.ChangePreset(b.Bank, mustBeInt(param.Value))
 		case "cabinetType":
-			return h.device.SetCabinetFromDevice(mustBeInt(param.Value))
+			preset, err := h.library.GetPreset(mustBeInt(param.Value))
+			if err != nil {
+				return nil, err
+			}
+			return h.device.SetImpulse(preset.Name, false, preset.Impulse)
 		}
 	}
 	return "unknown param", nil

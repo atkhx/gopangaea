@@ -1,36 +1,61 @@
 {{define "views/index/device"}}
 <div class="card">
-    <div class="card-body">
-        <div class="mb-3">
-            Состояние:
-            {{if .Connected}}
-            <strong>подключено</strong>
-            {{else}}
-            <strong>не подключено</strong>
-            <div class="spinner-border spinner-border-sm" role="status">
-                <span class="visually-hidden">подключение...</span>
-            </div>
-            {{end}}
+    <div class="card-header">
+        Состояние:
+        {{if .Connected}}
+        <strong>подключено</strong>
+        {{else}}
+        <strong>не подключено</strong>
+        <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">подключение...</span>
         </div>
-        <div>Устройство: <strong>{{.Device}}</strong></div>
-        <div>Прошивка: <strong>{{.Version}}</strong></div>
+        {{end}}
     </div>
+
+<!--    <div class="card-body">-->
+<!--        <div>Устройство: <strong>{{.Device}}</strong></div>-->
+<!--        <div>Прошивка: <strong>{{.Version}}</strong></div>-->
+<!--    </div>-->
+
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
             <label for="masterVolume" class="form-label">Master Volume</label>
             <input type="range" class="form-range" id="masterVolume" min="0" max="31" value="{{.Settings.MasterVolume}}">
         </li>
 
-        <li class="list-group-item">
-            <div class="btn-group btn-group-sm align-items-center p-1 mb-1" role="group">
-                <input type="radio" class="btn-check" name="mode" id="mode1" autocomplete="off" value="1" {{if eq .Mode 1}}checked{{end}}>
-                <label class="btn btn-outline-primary" for="mode1">Phones</label>
+        <li class="list-group-item" style="text-align: center">
+            <div>
+                <div class="btn-group btn-group-sm align-items-center p-1" role="group">
+                    {{range $idx, $val := .PresetSelection.Banks }}
+                    <input type="radio" class="btn-check" name="bank"
+                           {{if $val.Selected}}checked{{end}}
+                           id="bank{{$idx}}" autocomplete="off" value="{{$idx}}">
+                    <label class="btn btn-outline-primary" for="bank{{$idx}}">{{$val.Label}}</label>
+                    {{end}}
+                </div>
+            </div>
+            <div>
+                <div class="btn-group btn-group-sm align-items-center p-1" role="group">
+                    {{range $idx, $val := .PresetSelection.Presets }}
+                    <input type="radio" class="btn-check" name="preset"
+                           {{if $val.Selected}}checked{{end}}
+                           id="preset{{$idx}}" autocomplete="off" value="{{$idx}}">
+                    <label class="btn btn-outline-primary" for="preset{{$idx}}">{{$val.Label}}</label>
+                    {{end}}
+                </div>
+            </div>
 
-                <input type="radio" class="btn-check" name="mode" id="mode2" autocomplete="off" value="2" {{if eq .Mode 2}}checked{{end}}>
-                <label class="btn btn-outline-primary" for="mode2">Line</label>
+            <div>
+                <div class="btn-group btn-group-sm align-items-center p-1 mb-1" role="group">
+                    <input type="radio" class="btn-check" name="mode" id="mode1" autocomplete="off" value="1" {{if eq .Mode 1}}checked{{end}}>
+                    <label class="btn btn-outline-primary" for="mode1">Phones</label>
 
-                <input type="radio" class="btn-check" name="mode" id="mode3" autocomplete="off" value="3" {{if eq .Mode 3}}checked{{end}}>
-                <label class="btn btn-outline-primary" for="mode3">Balance</label>
+                    <input type="radio" class="btn-check" name="mode" id="mode2" autocomplete="off" value="2" {{if eq .Mode 2}}checked{{end}}>
+                    <label class="btn btn-outline-primary" for="mode2">Line</label>
+
+                    <input type="radio" class="btn-check" name="mode" id="mode3" autocomplete="off" value="3" {{if eq .Mode 3}}checked{{end}}>
+                    <label class="btn btn-outline-primary" for="mode3">Balance</label>
+                </div>
             </div>
         </li>
     </ul>

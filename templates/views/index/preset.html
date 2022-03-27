@@ -1,44 +1,95 @@
 {{define "views/index/preset"}}
-<div class="card">
+<div class="card mb-3">
+    <div class="card-header">
+        Состояние:
+        {{if .Connected}}
+        <strong>подключено</strong>
+        {{else}}
+        <strong>не подключено</strong>
+        <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">подключение...</span>
+        </div>
+        {{end}}
+    </div>
+
     <div class="card-body">
         <div class="row">
-            <div class="col-auto">
-                <div class="btn-group-vertical btn-group-sm" role="group">
-                    <button class="btn btn-default border-secondary dropdown-toggle" type="button" id="bankDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                        Bank {{.Bank}}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="bankDropdown">
-                        <li><a class="dropdown-item" href="#">0</a></li>
-                        <li><a class="dropdown-item" href="#">1</a></li>
-                        <li><a class="dropdown-item" href="#">2</a></li>
-                        <li><a class="dropdown-item" href="#">3</a></li>
-                        <li><a class="dropdown-item" href="#">4</a></li>
-                        <li><a class="dropdown-item" href="#">5</a></li>
-                        <li><a class="dropdown-item" href="#">6</a></li>
-                        <li><a class="dropdown-item" href="#">7</a></li>
-                        <li><a class="dropdown-item" href="#">8</a></li>
-                        <li><a class="dropdown-item" href="#">9</a></li>
-                    </ul>
+            <div class="col-auto mb-1 pt-2">
+                <div>Устройство: <strong>{{.Device}}</strong></div>
+                <div>Прошивка: <strong>{{.Version}}</strong></div>
+            </div>
 
-                    <button class="btn btn-default border-secondary dropdown-toggle" type="button" id="presetDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                        Preset {{.Preset}}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="presetDropdown">
-                        <li><a class="dropdown-item" href="#">0</a></li>
-                        <li><a class="dropdown-item" href="#">1</a></li>
-                        <li><a class="dropdown-item" href="#">2</a></li>
-                        <li><a class="dropdown-item" href="#">3</a></li>
-                        <li><a class="dropdown-item" href="#">4</a></li>
-                        <li><a class="dropdown-item" href="#">5</a></li>
-                        <li><a class="dropdown-item" href="#">6</a></li>
-                        <li><a class="dropdown-item" href="#">7</a></li>
-                        <li><a class="dropdown-item" href="#">8</a></li>
-                        <li><a class="dropdown-item" href="#">9</a></li>
-                    </ul>
+            <div class="col-lg col-sm-12 mb-3 pt-2">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="currentImpulseName" value="{{.ImpulseName}}" readonly>
+                    <label for="currentImpulseName">Выбранный импульс</label>
                 </div>
             </div>
 
-            <div class="col"></div>
+            <div class="col-lg-auto col-sm-12 align-items-center justify-content-center">
+                <div class="row mb-1">
+                    <div class="col-auto">
+                        <label for="masterVolume" class="form-label">Master</label>
+                    </div>
+                    <div class="col">
+                        <input type="range" class="form-range" id="masterVolume" min="0" max="31" value="{{.Settings.MasterVolume}}">
+                    </div>
+                </div>
+                <div class="btn-group-sm" role="group" style="text-align: center">
+                    <button id="bankBtnGroup" type="button" class="btn btn-primary border-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Bank {{.Bank}}
+                    </button>
+                    <ul id="changeBank" class="dropdown-menu" aria-labelledby="bankBtnGroup">
+                        {{range $idx, $val := .PresetSelection.Banks }}
+                        <li>
+                            <button type="button" class="dropdown-item" name="bank"
+                                    id="bank{{$idx}}" value="{{$idx}}">
+                                Bank {{$val.Label}}
+                            </button>
+                        </li>
+                        {{end}}
+                    </ul>
+
+                    <button id="presetBtnGroup" type="button" class="btn btn-primary border-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Preset {{.Preset}}
+                    </button>
+                    <ul id="changePreset" class="dropdown-menu" aria-labelledby="presetBtnGroup">
+                        {{range $idx, $val := .PresetSelection.Presets }}
+                        <li>
+                            <button type="button" class="dropdown-item" name="bank"
+                                    id="preset{{$idx}}" value="{{$idx}}">
+                                Preset {{$val.Label}}
+                            </button>
+                        </li>
+                        {{end}}
+                    </ul>
+
+                    <button id="modeBtnGroup" type="button" class="btn btn-primary border-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{.ModeName}}
+                    </button>
+                    <ul id="changeMode" class="dropdown-menu" aria-labelledby="modeBtnGroup">
+                        <li>
+                            <button type="button" class="dropdown-item" name="mode"
+                                    id="mode1" value="1">
+                                Phones
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" name="mode"
+                                    id="mode2" value="2">
+                                Line
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" name="mode"
+                                    id="mode3" value="3">
+                                Balance
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

@@ -7,6 +7,8 @@ import (
 	"log"
 	"math"
 	"strconv"
+
+	"github.com/atkhx/gopangaea/internal/pkg/library/settings"
 )
 
 const ResponseLength = 87
@@ -40,7 +42,7 @@ func convertResponse(data []byte) []byte {
 	return result
 }
 
-func (r Response) Settings() Settings {
+func (r Response) Settings() settings.Settings {
 	lpv := int(math.Pow(195.0-float64(int(r.Bytes[36])), 2)*(19000.0/math.Pow(195.0, 2.0)) + 1000.0)
 	hpv := (int(r.Bytes[37])*980)/255 + 20
 
@@ -59,42 +61,40 @@ func (r Response) Settings() Settings {
 		prl = 256 + prl
 	}
 
-	return Settings{
-		NoiseGate: NoiseGate{
+	return settings.Settings{
+		NoiseGate: settings.NoiseGate{
 			Active: r.Bytes[20] > 0,
 			Thresh: int(r.Bytes[21]),
 			Decay:  int(r.Bytes[22]),
 		},
-		Compressor: Compressor{
+		Compressor: settings.Compressor{
 			Active:  r.Bytes[23] > 0,
 			Sustain: int(r.Bytes[24]),
 			Volume:  int(r.Bytes[25]),
 		},
-		PreAmp: PreAmp{
+		PreAmp: settings.PreAmp{
 			Active:    r.Bytes[15] > 0,
 			Volume:    int(r.Bytes[16]),
 			Equalizer: [3]int{prl, prm, prh},
 		},
-		EarlyReverb: EarlyReverb{
+		EarlyReverb: settings.EarlyReverb{
 			Active: r.Bytes[10] > 0,
 			Volume: int(r.Bytes[5]),
 			Type:   int(r.Bytes[6]),
 		},
-		PowerAmp: PowerApm{
+		PowerAmp: settings.PowerApm{
 			Active: r.Bytes[11] > 0,
 			Volume: int(r.Bytes[12]),
 			Slave:  int(r.Bytes[13]),
 			Index:  int(r.Bytes[14]),
 		},
-		Presence: Presence{
+		Presence: settings.Presence{
 			Active: r.Bytes[40] > 0,
 			Value:  int(r.Bytes[41]),
 		},
-		Impulse: Impulse{
-			Active: r.Bytes[8] > 0,
-		},
+		ImpulseState: r.Bytes[8] > 0,
 		MasterVolume: int(r.Bytes[7]),
-		Equalizer: Equalizer{
+		Equalizer: settings.Equalizer{
 			Active:   r.Bytes[9] > 0,
 			Position: int(r.Bytes[42]),
 			Mixer: [5]int{
@@ -119,11 +119,11 @@ func (r Response) Settings() Settings {
 				quantityFactory(int(r.Bytes[35])),
 			},
 		},
-		LowPassFilter: LowPassFilter{
+		LowPassFilter: settings.LowPassFilter{
 			Active: r.Bytes[39] > 0,
 			Value:  lpv,
 		},
-		HighPassFilter: HighPassFilter{
+		HighPassFilter: settings.HighPassFilter{
 			Active: r.Bytes[38] > 0,
 			Value:  hpv,
 		},

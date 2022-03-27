@@ -20,7 +20,7 @@
         <li class="list-group-item">
             <div class="form-floating">
                 <select class="form-select" id="powerAmpType" aria-label="Тип усилителя">
-                    {{range $idx, $val := .Settings.AmpTypes }}
+                    {{range $idx, $val := .AmpTypes }}
                     <option value="{{ $idx }}" {{ if $val.Selected }}selected{{end}}>{{ $val.Name }}</option>
                     {{end}}
                 </select>

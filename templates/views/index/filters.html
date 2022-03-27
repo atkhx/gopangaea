@@ -6,16 +6,15 @@
 
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
-            <div class="row">
-                <div class="col-sm-6">
-                    <label for="highPassFilterValue" class="form-label">HighPassFilter</label>
-                    <input type="range" class="form-range" id="highPassFilterValue" min="20" max="1000" value="{{.Settings.HighPassFilter.Value}}">
-                </div>
-                <div class="col-sm-6">
-                    <label for="lowPassFilterValue" class="form-label">LowPassFilter</label>
-                    <input type="range" class="form-range" id="lowPassFilterValue" min="1000" max="20000" value="{{.Settings.LowPassFilter.Value}}">
-                </div>
-            </div>
+            <label for="highPassFilterValue" class="form-label">Срез нижних частот</label>
+            <input type="range" class="form-range" id="highPassFilterValue" min="20" max="1000" value="{{.Settings.HighPassFilter.Value}}">
+        </li>
+    </ul>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <label for="lowPassFilterValue" class="form-label">Срез верхних частот</label>
+            <input type="range" class="form-range" id="lowPassFilterValue" min="1000" max="20000" value="{{.Settings.LowPassFilter.Value}}">
         </li>
     </ul>
 

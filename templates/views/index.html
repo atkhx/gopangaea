@@ -1,57 +1,54 @@
 {{define "views/index"}}
 
 <div class="container">
-    <pre class="tt" id="debug">
-        some debug text
-    </pre>
+    <pre class="tt" id="debug"></pre>
 </div>
-
-<div class="container" id="controlForm">
-
-    <div class="row">
-        <div class="col-md-3">
-            {{template "views/index/device" .}}
-        </div>
-
-        <div class="col-md-3">
-            {{template "views/index/noise-gate" .}}
-        </div>
-        <div class="col-md-3">
-            {{template "views/index/compressor" .}}
-        </div>
-
-        <div class="col-md-3">
-            {{template "views/index/reverb" .}}
-        </div>
-
+<div  id="controlForm">
+    <div class="container">
+        {{template "views/index/preset" .}}
     </div>
 
-    <br>
+    <div class="container">
 
-    <div class="row">
-        <div class="col-md-3">
-            {{template "views/index/preamp" .}}
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/noise-gate" .}}
+            </div>
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/compressor" .}}
+            </div>
+
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/reverb" .}}
+            </div>
         </div>
 
-        <div class="col-md-3">
-            {{template "views/index/poweramp" .}}
+
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/preamp" .}}
+            </div>
+
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/poweramp" .}}
+            </div>
+            <div class="col-lg-4 mb-3">
+                {{template "views/index/cabinet" .}}
+            </div>
         </div>
-        <div class="col-md-6">
-            {{template "views/index/cabinet" .}}
+
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                {{template "views/index/filters" .}}
+            </div>
+
+            <div class="col-sm-9 mb-3">
+                {{template "views/index/equalizer" .}}
+            </div>
         </div>
+
+        <br>
+
     </div>
-
-    <br>
-
-    <div class="row">
-        <div class="col-md-5">
-            {{template "views/index/filters" .}}
-        </div>
-
-        <div class="col-sm-7">
-            {{template "views/index/equalizer" .}}
-        </div>
-    </div>
-
 </div>
 {{end}}
