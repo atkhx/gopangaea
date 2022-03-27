@@ -1,28 +1,49 @@
 {{define "views/index/preset"}}
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+</svg>
+
 <div class="card mb-3">
     <div class="card-header">
         Состояние:
         {{if .Connected}}
-        <strong>подключено</strong>
+            <strong>подключено</strong>
+            <svg class="bi flex-shrink-0 me-2"
+                 width="20" height="20" role="img"
+                 data-bs-toggle="tooltip" data-bs-html="true" title="<div>{{.Device}}</div><div>{{.Version}}</div>">
+                <use xlink:href="#info-fill"/>
+            </svg>
         {{else}}
-        <strong>не подключено</strong>
-        <div class="spinner-border spinner-border-sm" role="status">
-            <span class="visually-hidden">подключение...</span>
-        </div>
+            <strong>не подключено</strong>
+            <div class="spinner-border spinner-border-sm" role="status"></div>
         {{end}}
     </div>
 
     <div class="card-body">
         <div class="row">
-            <div class="col-auto mb-1 pt-2">
-                <div>Устройство: <strong>{{.Device}}</strong></div>
-                <div>Прошивка: <strong>{{.Version}}</strong></div>
-            </div>
-
-            <div class="col-lg col-sm-12 mb-3 pt-2">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="currentImpulseName" value="{{.ImpulseName}}" readonly>
-                    <label for="currentImpulseName">Выбранный импульс</label>
+            <div class="col-lg col-sm-12">
+                <div class="row">
+                    <div class="col mb-3 pt-1">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="currentImpulseName" value="{{.ImpulseName}}" readonly>
+                            <label for="currentImpulseName">Выбранный импульс</label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div>
+                            <button id="savePresetBtn" type="button" class="btn btn-sm btn-primary" style="width: 100%">
+                                Сохранить
+                            </button>
+                        </div>
+                        <div>
+                            <button id="resetPresetBtn" type="button" class="btn btn-sm btn-secondary mt-1" style="width: 100%">
+                                Сбросить
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -35,7 +56,7 @@
                         <input type="range" class="form-range" id="masterVolume" min="0" max="31" value="{{.Settings.MasterVolume}}">
                     </div>
                 </div>
-                <div class="btn-group-sm" role="group" style="text-align: center">
+                <div class="btn-group-sm" role="group">
                     <button id="bankBtnGroup" type="button" class="btn btn-primary border-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Bank {{.Bank}}
                     </button>
@@ -88,7 +109,6 @@
                         </li>
                     </ul>
                 </div>
-
             </div>
         </div>
     </div>

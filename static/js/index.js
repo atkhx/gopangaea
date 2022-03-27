@@ -1,4 +1,9 @@
 $('document').ready(function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     $('#controlForm input').change(function () {
         if (this.type === 'checkbox') {
             $('#debug').html('changed input ' + this.id + ':' + this.checked)

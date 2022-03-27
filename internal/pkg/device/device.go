@@ -13,6 +13,7 @@ import (
 	get_mode "github.com/atkhx/gopangaea/internal/pkg/commands/get-mode"
 	get_settings "github.com/atkhx/gopangaea/internal/pkg/commands/get-settings"
 	get_version "github.com/atkhx/gopangaea/internal/pkg/commands/get-version"
+	reset_preset "github.com/atkhx/gopangaea/internal/pkg/commands/reset-preset"
 	save_preset "github.com/atkhx/gopangaea/internal/pkg/commands/save-preset"
 	set_compressor_state "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-state"
 	set_compressor_sustain "github.com/atkhx/gopangaea/internal/pkg/commands/set-compressor-sustain"
@@ -260,6 +261,10 @@ func (d *device) GetImpulseNames() (get_impulse_names.Response, error) {
 
 	impulsesCacheResponse = &r
 	return *impulsesCacheResponse, nil
+}
+
+func (d *device) ResetPreset() (bool, error) {
+	return d.execSetter(reset_preset.New())
 }
 
 func (d *device) ChangePreset(bank, preset int) (bool, error) {

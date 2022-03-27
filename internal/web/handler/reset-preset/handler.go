@@ -3,13 +3,10 @@ package reset_preset
 import (
 	"fmt"
 	"net/http"
-
-	get_bank "github.com/atkhx/gopangaea/internal/pkg/commands/get-bank"
 )
 
 type Device interface {
-	GetBank() (get_bank.Response, error)
-	ChangePreset(bank, preset int) (bool, error)
+	ResetPreset() (bool, error)
 }
 
 type handler struct {
@@ -35,13 +32,7 @@ type request struct {
 }
 
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	b, err := h.device.GetBank()
-	if err != nil {
-		h.writeError(w, err)
-		return
-	}
-
-	_, err = h.device.ChangePreset(b.Bank, b.Preset)
+	_, err := h.device.ResetPreset()
 	if err != nil {
 		h.writeError(w, err)
 		return
